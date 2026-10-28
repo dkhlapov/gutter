@@ -30,12 +30,14 @@ reviews:
         Bash scripts run from a checkout that is also the user's live desktop.
         - Flag any new `pkill`, `killall` or `qs ... kill` that a test or check could run against the real system.
           Tests must use stand-ins or a shimmed PATH, and GUTTER_SMOKE=1 for anything that could touch real state.
+        - Test harnesses (scripts/auth.sh and the like) run from a scratch config root with a private HOME, XDG
+          folders, PATH and bus. Flag a change that reads or writes the real HOME, state files or session bus.
         - Scripts use `set -euo pipefail` (or `set -uo pipefail` where a failing step is handled on purpose).
     - path: "scripts/lint-baseline.txt"
       instructions: |
         The baseline records known qmllint false positives. A new entry should be a false positive, not a real
         warning silenced to make lint pass.
-    - path: "{lockscreen/**,services/Auth.qml,services/Lock.qml,services/Idle.qml,scripts/lock*,scripts/rescue-unlock.sh}"
+    - path: "{lockscreen/**,services/Auth.qml,services/Lock.qml,services/Idle.qml,lib/lock.js,lib/idle.js,scripts/lock*,scripts/rescue-unlock.sh}"
       instructions: |
         Security-sensitive: this is the lock screen and its PAM and idle handling. Look for ways to bypass the
         lock, lock the user out, leak the password, or skip the rescue path. Keep this review strict.
