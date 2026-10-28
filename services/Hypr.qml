@@ -47,15 +47,21 @@ Singleton {
             return;
         primed = true;
         Hyprland.refreshMonitors();
+        Hyprland.refreshWorkspaces();
     }
 
     // Monitor objects carry no special-workspace property; only their IPC snapshot does, so refresh it on toggles.
+    // Workspace objects carry no fullscreen state until refreshed either: without it a fullscreen game on a special
+    // workspace never counts as fullscreen.
     Connections {
         target: Hyprland
 
         function onRawEvent(event: HyprlandEvent): void {
-            if (event.name === "activespecial" || event.name === "fullscreen")
+            if (HyprLib.refreshesWorkspaces(event.name)) {
                 Hyprland.refreshMonitors();
+                Hyprland.refreshWorkspaces();
+                settle.restart();
+            }
         }
 
         function onFocusedMonitorChanged(): void {
@@ -65,6 +71,15 @@ Singleton {
         function onActiveToplevelChanged(): void {
             root.noteActive();
         }
+    }
+
+    // Quickshell drops a refresh while its own is in flight, which can hold the state from before the change; one
+    // more shortly after picks up the settled state.
+    Timer {
+        id: settle
+
+        interval: 200
+        onTriggered: Hyprland.refreshWorkspaces()
     }
 
     Component.onCompleted: {

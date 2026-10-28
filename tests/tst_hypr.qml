@@ -24,6 +24,15 @@ TestCase {
         verify(!H.fullscreen({ hasFullscreen: false }, { hasFullscreen: false }));
     }
 
+    // Quickshell's workspace objects only learn hasFullscreen from a refresh, so a fullscreen game on a special
+    // workspace went unseen and the island stayed above it.
+    function test_refreshesWorkspacesOnFullscreenAndSpecialToggle() {
+        verify(H.refreshesWorkspaces("fullscreen"));
+        verify(H.refreshesWorkspaces("activespecial"));
+        verify(!H.refreshesWorkspaces("activewindow"));
+        verify(!H.refreshesWorkspaces(""));
+    }
+
     // Hyprland keeps the last focused window as active after the workspace it sat on empties or is covered.
     function test_toplevelOnTop() {
         verify(H.toplevelOnTop("4", "4", ""));
