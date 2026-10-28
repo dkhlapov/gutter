@@ -1,0 +1,62 @@
+# yaml-language-server: $schema=https://www.coderabbit.ai/integrations/schema.v2.json
+# CodeRabbit review settings. CLAUDE.md and the scripts under scripts/ are the source for the conventions below.
+language: "en-US"
+
+reviews:
+  profile: "chill"
+  high_level_summary: true
+
+  auto_review:
+    enabled: true
+    drafts: false
+
+  path_filters:
+    # Compiled shaders; review the .frag sources instead.
+    - "!**/*.qsb"
+
+  path_instructions:
+    - path: "**/*.qml"
+      instructions: |
+        Gutter is a Quickshell (QML) shell for Hyprland.
+        - Text on paper uses Theme.text. Theme.ink is for lines (outlines, borders, ink plates) only. Every
+          `color: Theme.ink` must be listed in scripts/ink-lines.txt; flag a new one that is text, or one with no entry.
+        - theme/ is the only reader of palette.json. Colours elsewhere come from Theme, not from the file.
+    - path: "pill/sections/**"
+      instructions: |
+        A section folder is imported with a bare `import "<sub>"`, so every .qml file in it needs a line in the
+        folder's hand-written qmldir (`Name 1.0 Name.qml`). Flag a new file without one.
+    - path: "scripts/**/*.sh"
+      instructions: |
+        Bash scripts run from a checkout that is also the user's live desktop.
+        - Flag any new `pkill`, `killall` or `qs ... kill` that a test or check could run against the real system.
+          Tests must use stand-ins or a shimmed PATH, and GUTTER_SMOKE=1 for anything that could touch real state.
+        - Scripts use `set -euo pipefail` (or `set -uo pipefail` where a failing step is handled on purpose).
+    - path: "scripts/lint-baseline.txt"
+      instructions: |
+        The baseline records known qmllint false positives. A new entry should be a false positive, not a real
+        warning silenced to make lint pass.
+    - path: "{lockscreen/**,services/Auth.qml,services/Lock.qml,services/Idle.qml,scripts/lock*,scripts/rescue-unlock.sh}"
+      instructions: |
+        Security-sensitive: this is the lock screen and its PAM and idle handling. Look for ways to bypass the
+        lock, lock the user out, leak the password, or skip the rescue path. Keep this review strict.
+    - path: "tools/**/*.py"
+      instructions: |
+        Python helpers that the `gutter` CLI and the shell call. State files should be written through
+        tools/atomicio.py where the surrounding code already does so, so a crash never leaves a half-written file.
+    - path: "hypr/**"
+      instructions: |
+        Gutter owns the Hyprland config. The generated hypr-gutter.lua is never edited by hand; user overrides live
+        in hypr-user.lua and hypr-vars.lua, and changes here must not break those load orders.
+    - path: "tests/**"
+      instructions: |
+        Tests must not touch the real HOME, state files or running shell. Python tests use unittest, QML tests use
+        Qt Quick Test (tst_*.qml).
+
+  finishing_touches:
+    docstrings:
+      enabled: false
+    unit_tests:
+      enabled: false
+
+chat:
+  auto_reply: true
