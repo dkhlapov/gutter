@@ -1,0 +1,7 @@
+# Hand-listed: a section loaded with Qt.createComponent cannot list this folder on its own, so a bare
+# `import "tools"` finds no types without it. Add a line for every file here.
+CameraCard 1.0 CameraCard.qml
+CameraView 1.0 CameraView.qml
+ScratchpadCard 1.0 ScratchpadCard.qml
+TimerCard 1.0 TimerCard.qml
+ToggleTile 1.0 ToggleTile.qml

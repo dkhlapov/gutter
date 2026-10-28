@@ -1,0 +1,6 @@
+# Hand-listed: a section loaded with Qt.createComponent cannot list this folder on its own, so a bare
+# `import "overview"` finds no types without it. Add a line for every file here.
+ActiveWindow 1.0 ActiveWindow.qml
+ClockWeather 1.0 ClockWeather.qml
+MediaHero 1.0 MediaHero.qml
+ResourceTile 1.0 ResourceTile.qml

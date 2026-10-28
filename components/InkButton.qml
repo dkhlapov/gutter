@@ -1,0 +1,76 @@
+import QtQuick
+import qs.theme
+
+// A flat button with a hard shadow. Pressed (or checked) it drops onto its shadow, which then disappears.
+Item {
+    id: root
+
+    property string icon
+    property real iconSize: 16
+    property real textSize: 13
+    property string text
+    property string accent: ""
+    property bool checked: false
+    // True while pressed or checked; can be forced to show the pressed look.
+    property bool down: area.pressed || checked
+
+    signal clicked
+
+    implicitWidth: row.implicitWidth + 2 * Theme.pad + 2 * Theme.inkWidth
+    implicitHeight: Theme.pillHeight
+
+    Rectangle {
+        visible: !root.down && root.enabled
+        x: Theme.shadowOffset
+        y: Theme.shadowOffset
+        width: parent.width
+        height: parent.height
+        color: Theme.shadow
+    }
+
+    Rectangle {
+        x: root.down ? Theme.shadowOffset : 0
+        y: root.down ? Theme.shadowOffset : 0
+        width: parent.width
+        height: parent.height
+        // Disabled: flat paper, no shadow, outline kept; the text and icon are dimmed (not the surface).
+        color: root.accent === "" || !root.enabled ? Theme.paper : Theme.accent[root.accent]
+        border.color: Theme.ink
+        border.width: Theme.inkWidth
+
+        Row {
+            id: row
+
+            readonly property color textColor: root.accent === "" || !root.enabled ? Theme.text : Theme.on[root.accent]
+
+            anchors.centerIn: parent
+            spacing: Theme.gap
+            opacity: root.enabled ? 1 : 0.4
+
+            InkIcon {
+                anchors.verticalCenter: parent.verticalCenter
+                visible: root.icon !== ""
+                icon: root.icon
+                size: root.iconSize
+                color: row.textColor
+            }
+
+            InkText {
+                anchors.verticalCenter: parent.verticalCenter
+                visible: root.text !== ""
+                text: root.text
+                color: row.textColor
+                font.bold: true
+                font.pixelSize: root.textSize
+            }
+        }
+    }
+
+    MouseArea {
+        id: area
+
+        anchors.fill: parent
+        cursorShape: Qt.PointingHandCursor
+        onClicked: root.clicked()
+    }
+}

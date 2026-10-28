@@ -1,0 +1,40 @@
+{
+  "version": 2,
+  "source": "wiring-test",
+  "roles": {
+    "active": "pink",
+    "urgent": "teal",
+    "focusBorder": "navy",
+    "ok": "sun",
+    "special": "coral",
+    "muted": "lime"
+  },
+  "light": {
+    "ink": "#1a2b3c",
+    "paper": "#efe3c2",
+    "text": "#4d2a14",
+    "accents": {
+      "navy": "#6a7fa0",
+      "teal": "#2fa09b",
+      "magenta": "#b060c0",
+      "coral": "#e05a3c",
+      "sun": "#f0c840",
+      "lime": "#9ac832",
+      "pink": "#e47a9f"
+    }
+  },
+  "dark": {
+    "ink": "#b9c7d6",
+    "paper": "#1d2a1f",
+    "text": "#d6c0b9",
+    "accents": {
+      "navy": "#3a6a96",
+      "teal": "#0a7a78",
+      "magenta": "#9a40b8",
+      "coral": "#cc3a14",
+      "sun": "#906000",
+      "lime": "#527300",
+      "pink": "#b83270"
+    }
+  }
+}

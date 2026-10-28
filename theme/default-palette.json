@@ -1,0 +1,40 @@
+{
+  "version": 2,
+  "source": "",
+  "roles": {
+    "active": "sun",
+    "urgent": "coral",
+    "focusBorder": "teal",
+    "ok": "lime",
+    "special": "magenta",
+    "muted": "navy"
+  },
+  "light": {
+    "ink": "#0e0d0e",
+    "paper": "#fbf6d3",
+    "text": "#0e0d0e",
+    "accents": {
+      "navy": "#5780a3",
+      "teal": "#22a5a6",
+      "magenta": "#aa5bbd",
+      "coral": "#e2492f",
+      "sun": "#f6d14b",
+      "lime": "#a3d23a",
+      "pink": "#e8739d"
+    }
+  },
+  "dark": {
+    "ink": "#e4dfbd",
+    "paper": "#151e26",
+    "text": "#e4dfbd",
+    "accents": {
+      "navy": "#41739d",
+      "teal": "#007d7e",
+      "magenta": "#a745be",
+      "coral": "#d92600",
+      "sun": "#9b6400",
+      "lime": "#5b7a00",
+      "pink": "#c53b75"
+    }
+  }
+}

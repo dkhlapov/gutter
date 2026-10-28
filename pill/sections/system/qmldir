@@ -1,0 +1,7 @@
+# Hand-listed: a section loaded with Qt.createComponent cannot list this folder on its own, so a bare
+# `import "system"` finds no types without it. Add a line for every file here.
+DisksCard 1.0 DisksCard.qml
+HardwareCard 1.0 HardwareCard.qml
+MemoryCard 1.0 MemoryCard.qml
+NetworkCard 1.0 NetworkCard.qml
+Sparkline 1.0 Sparkline.qml

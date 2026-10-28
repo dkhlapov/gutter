@@ -1,0 +1,67 @@
+-- Gutter's Hyprland loader. The migration writes this file, with the repo-folder placeholder below replaced, to
+-- ~/.config/hypr/hyprland.lua. All the config is in the repo (hypr/gutter.lua); this file only finds it.
+-- The loader owns package.path. The repo folder must not contain ";" or "?" (package.path cannot hold them), "]==]"
+-- or end in "]==" (it sits in a long bracket string); the migration refuses such a path.
+local home   = os.getenv("HOME") or ""
+local config = (os.getenv("XDG_CONFIG_HOME") or (home .. "/.config")) .. "/gutter"
+local state  = (os.getenv("XDG_STATE_HOME") or (home .. "/.local/state")) .. "/gutter"
+package.path = [==[@REPO@]==] .. "/hypr/?.lua;" .. package.path .. ";" .. config .. "/?.lua;" .. state .. "/?.lua"
+
+-- Hyprland rebuilds the Lua state on every reload and fires hyprland.start only once per session, so "this session
+-- already started" lives in a file: written at hyprland.start, found by a later load (a reload).
+local marker_dir  = (os.getenv("XDG_RUNTIME_DIR") or "/tmp") .. "/gutter"
+local marker      = marker_dir .. "/hypr-started-" .. (os.getenv("HYPRLAND_INSTANCE_SIGNATURE") or "x")
+
+local function quote(s)
+    return "'" .. (s:gsub("'", "'\\''")) .. "'"
+end
+
+local started = false
+do
+    local f = io.open(marker)
+    if f then
+        f:close()
+        started = true
+    end
+end
+
+-- A broken or missing config must not leave a session with no way in: a terminal bind, a notification and, when
+-- the whole repo config failed, the shell (it does not depend on this config). hypr/gutter.lua calls this too for a
+-- module it could not load, with start_shell false (it has already queued the shell).
+local function failsafe(err, start_shell)
+    hl.bind("SUPER + Return", hl.dsp.exec_cmd("foot"))
+
+    local function notify_cmd(delay)
+        return (delay and ("sleep " .. delay .. "; ") or "") .. "notify-send -u critical -- "
+            .. quote("Gutter Hyprland config failed") .. " " .. quote(tostring(err):sub(1, 300))
+    end
+
+    if started then
+        -- A reload: the shell is already running.
+        hl.exec_cmd(notify_cmd())
+    else
+        hl.on("hyprland.start", function()
+            if start_shell then hl.exec_cmd("qs -c gutter -n -d") end
+            -- The shell owns the notification server, so give it a moment to come up.
+            hl.exec_cmd(notify_cmd(2))
+        end)
+    end
+end
+GutterFailsafe = failsafe
+
+hl.on("hyprland.start", function()
+    hl.exec_cmd("mkdir -p " .. quote(marker_dir) .. " && touch " .. quote(marker))
+end)
+
+-- Loaded like require does, but through loadfile: Hyprland's own require records any error it sees as a config error
+-- even inside a pcall, which would make a failure here fatal instead of handled.
+local ok, err = false, 'module "gutter" not found in ' .. package.path
+local path = package.searchpath("gutter", package.path)
+if path then
+    local chunk
+    chunk, err = loadfile(path)
+    if chunk then
+        ok, err = pcall(chunk, "gutter", path)
+    end
+end
+if not ok then failsafe(err, true) end

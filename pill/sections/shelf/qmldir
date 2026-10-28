@@ -1,0 +1,6 @@
+# Hand-listed: a section loaded with Qt.createComponent cannot list this folder on its own, so a bare
+# `import "shelf"` finds no types without it. Add a line for every file here.
+DropCard 1.0 DropCard.qml
+ShelfGrid 1.0 ShelfGrid.qml
+ShelfHints 1.0 ShelfHints.qml
+ShelfTile 1.0 ShelfTile.qml

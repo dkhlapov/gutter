@@ -1,0 +1,4 @@
+# Hand-listed: a section loaded with Qt.createComponent cannot list this folder on its own, so a bare
+# `import "clipboard"` finds no types without it. Add a line for every file here.
+ClipRow 1.0 ClipRow.qml
+PeekCard 1.0 PeekCard.qml

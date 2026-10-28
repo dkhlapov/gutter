@@ -1,0 +1,61 @@
+# Lines (outlines, borders, rules, ink plates) that use Theme.ink; checked by scripts/ink-lines.sh, run from
+# scripts/lint.sh. One entry per hit, as `<path>: <enclosing object> > <trimmed line>`; the enclosing object is the
+# nearest preceding line opening a block at a smaller indent, so Text { color: Theme.ink } does not pass as
+# Rectangle { color: Theme.ink }. A line used n times in one object is listed n times. An entry that matches
+# no line is an error. Text on paper is Theme.text and must not be listed here.
+bar/PowerMenu.qml: Rectangle { > border.color: Theme.ink
+bar/WorkspaceCell.qml: Rectangle { > color: Theme.ink
+components/AnalogClock.qml: Rectangle { > border.color: Theme.ink
+components/AnalogClock.qml: Rectangle { > border.color: Theme.ink
+components/CoverArt.qml: Rectangle { > border.color: Theme.ink
+components/DayRow.qml: Rectangle { > border.color: Theme.ink
+components/DaylightBar.qml: Rectangle { > border.color: Theme.ink
+components/DaylightBar.qml: Rectangle { > border.color: Theme.ink
+components/HourlyStrip.qml: delegate: Rectangle { > border.color: Theme.ink
+components/IconPlate.qml: Rectangle { > border.color: Theme.ink
+components/InfoTile.qml: Rectangle { > border.color: Theme.ink
+components/InkBox.qml: Rectangle { > border.color: Theme.ink
+components/InkButton.qml: Rectangle { > border.color: Theme.ink
+components/InkMenuList.qml: Rectangle { > color: Theme.ink
+components/InkScrollBar.qml: Rectangle { > border.color: Theme.ink
+components/InkScrollBar.qml: Rectangle { > color: Theme.ink
+components/InkSlider.qml: Rectangle { > border.color: Theme.ink
+components/InkSlider.qml: Rectangle { > border.color: Theme.ink
+components/LabelTab.qml: Rectangle { > border.color: Theme.ink
+components/LabelTab.qml: Rectangle { > border.color: Theme.ink
+components/LevelBar.qml: Rectangle { > border.color: Theme.ink
+components/MonthGrid.qml: Rectangle { > border.color: Theme.ink
+components/MonthGrid.qml: delegate: Rectangle { > border.color: Theme.ink
+components/MonthGrid.qml: delegate: Rectangle { > border.color: Theme.ink
+components/MonthGrid.qml: delegate: Rectangle { > border.color: Theme.ink
+components/SeekBar.qml: Rectangle { > border.color: Theme.ink
+components/SeekBar.qml: Rectangle { > border.color: Theme.ink
+components/Visualiser.qml: delegate: Rectangle { > border.color: Theme.ink
+components/WorldClockTile.qml: Rectangle { > border.color: Theme.ink
+launcher/LauncherBox.qml: Rectangle { > border.color: Theme.ink
+launcher/LauncherBox.qml: Rectangle { > color: Theme.ink
+launcher/SessionScreen.qml: Rectangle { > border.color: Theme.ink
+launcher/SessionScreen.qml: Rectangle { > border.color: Theme.ink
+launcher/SessionScreen.qml: Rectangle { > border.color: Theme.ink
+launcher/SessionScreen.qml: Rectangle { > color: Theme.ink
+lockscreen/LockContent.qml: Rectangle { > border.color: Theme.ink
+lockscreen/PasswordField.qml: Rectangle { > color: Theme.ink
+pill/ClaudePill.qml: Rectangle { > border.color: Theme.ink
+pill/activities/NotificationPill.qml: Rectangle { > border.color: Theme.ink
+pill/sections/ClipboardSection.qml: Rectangle { > border.color: Theme.ink
+pill/sections/MusicSection.qml: Rectangle { > border.color: Theme.ink
+pill/sections/NotificationsSection.qml: Rectangle { > border.color: Theme.ink
+pill/sections/agents/ActivityCard.qml: Rectangle { > border.color: Theme.ink
+pill/sections/agents/LimitsCard.qml: Rectangle { > border.color: Theme.ink
+pill/sections/agents/LimitsCard.qml: Rectangle { > color: Theme.ink
+pill/sections/agents/NowCard.qml: delegate: Rectangle { > border.color: Theme.ink
+pill/sections/clipboard/ClipRow.qml: Rectangle { > border.color: Theme.ink
+pill/sections/clipboard/PeekCard.qml: Rectangle { > border.color: Theme.ink
+pill/sections/clipboard/PeekCard.qml: Rectangle { > border.color: Theme.ink
+pill/sections/mixer/AppStrip.qml: Rectangle { > border.color: Theme.ink
+pill/sections/notifications/NotificationCard.qml: Rectangle { > border.color: Theme.ink
+pill/sections/notifications/NotificationCard.qml: Rectangle { > border.color: Theme.ink
+pill/sections/notifications/NotificationCard.qml: Rectangle { > color: Theme.ink
+pill/sections/shelf/ShelfTile.qml: Rectangle { > border.color: Theme.ink
+pill/sections/system/NetworkCard.qml: Rectangle { > border.color: Theme.ink
+pill/sections/system/NetworkCard.qml: Rectangle { > border.color: Theme.ink

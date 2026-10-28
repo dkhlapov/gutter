@@ -1,0 +1,31 @@
+import re, unittest
+from pathlib import Path
+ROOT = Path(__file__).resolve().parents[1]
+
+# A layer-shell PanelWindow is destroyed when `visible` goes false and made again when it goes true. The
+# window's content is moved out of the old window and into the new one, and a TrayIcon inside it keeps a
+# ShaderEffectSource on an image, which holds on to the old window ("QQuickItem: Cannot use same item on different
+# windows at the same time") and crashes Qt with a SIGSEGV in QQuickItemPrivate::deliveryAgent. The bars hit it
+# every time a fullscreen window ended. So a window never unmaps for a fullscreen window; it drops to the
+# bottom layer, under it.
+class Windows(unittest.TestCase):
+    def windows(self):
+        # Not the tests, and not hidden folders (`.claude/worktrees` holds other checkouts of this repo).
+        files = [p for p in ROOT.rglob("*.qml") if not {"tests"} & set(p.relative_to(ROOT).parts) and not any(x.startswith(".") for x in p.relative_to(ROOT).parts) and re.search(r"^PanelWindow \{", p.read_text(), re.M)]
+        self.assertTrue(files)
+        return files
+
+    def test_no_window_unmaps_for_fullscreen(self):
+        for p in self.windows():
+            # Only the window's own `visible` (one indent, to the next property); a nested item may have its own.
+            for block in re.findall(r"^    visible:.*?(?=^    \w|\Z)", p.read_text(), re.M | re.S):
+                self.assertNotRegex(block, r"(?i)fullscreen", f"{p.relative_to(ROOT)}: PanelWindow.visible follows fullscreen; use WlrLayershell.layer")
+
+    def test_fullscreen_moves_the_layer(self):
+        for p in self.windows():
+            text = p.read_text()
+            if "hasFullscreen" in text:
+                self.assertRegex(text, r"WlrLayershell\.layer:[^\n]*(hasFullscreen|windowRaised)", f"{p.relative_to(ROOT)} reads hasFullscreen but not for its layer")
+
+if __name__ == "__main__":
+    unittest.main()

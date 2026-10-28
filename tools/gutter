@@ -1,0 +1,229 @@
+#!/usr/bin/env bash
+# gutter: set the wallpaper, regenerate or reset Gutter's palette, apply the light or dark theme, flip the
+# running shell's mode, and rewrite Hyprland's config after a shadow setting changed.
+# Exit 0 success, 1 generator/hypr/reload failure or any other abort (also notified), 2 usage error. Hyprland config
+# errors in Gutter's file also exit 1, after the work is done.
+set -euo pipefail
+
+self="$(readlink -f "$0")"
+tools="$(dirname "$self")"
+default_palette="${tools%/*}/theme/default-palette.json"
+state="${XDG_STATE_HOME:-$HOME/.local/state}/gutter"
+palette="$state/palette.json"
+wallpaper="$state/wallpaper"
+theme="$state/theme.json"
+reloaded="$state/hypr-reloaded"
+hypr_out="${GUTTER_HYPR_OUT:-$state/hypr-gutter.lua}"
+
+usage() {
+    cat >&2 <<'USAGE'
+usage: gutter wall set <image>
+       gutter palette regen
+       gutter palette default
+       gutter theme apply <light|dark>
+       gutter theme toggle|light|dark
+       gutter hypr
+USAGE
+    exit 2
+}
+
+# Set once fail() has reported, so the EXIT trap does not report the same exit again. With GUTTER_NO_NOTIFY=1 the
+# shell owns the notification, but the failure is still reported.
+reported=0
+config_errs=""
+
+# Print the message on stderr, notify once, and stop. GUTTER_NO_NOTIFY=1 (set by the shell's ThemeMode when it
+# retries an apply or `gutter hypr` that already failed) prints only, so a lasting failure is not notified every
+# minute.
+# Config errors held back by an earlier reload (config_errs) are added, so a later failure does not lose them.
+fail() {
+    local msg="$1" held="Hyprland config error: $config_errs"
+    reported=1
+    [[ -z "$config_errs" || "$msg" == "$held" ]] || msg+=$'\n'"$held"
+    printf '%s\n' "$msg" >&2
+    [[ "${GUTTER_NO_NOTIFY:-}" == 1 ]] || notify-send -a gutter -- "Gutter" "$msg" || true
+    exit 1
+}
+
+# ipc <function> [args...]: call the running shell; a flip goes through ThemeMode, which applies it.
+ipc() {
+    qs -c gutter ipc call gutter "$@" >/dev/null 2>&1 || fail "Gutter is not running; use gutter theme apply <mode>"
+}
+
+# run <fallback message> <command...>: on failure, fail with the command's stderr or the fallback.
+run() {
+    local fallback="$1" err
+    shift
+    if ! err="$("$@" 2>&1 >/dev/null)"; then
+        fail "${err:-$fallback}"
+    fi
+}
+
+tmp=""
+
+# On every exit: remove the temp file, and report an abort fail() did not (a command failing under set -e, an unset
+# variable) and exit 1 after it: the shell takes exit status 1 for "the tool notified", so every abort ends in 1 and
+# only `env` can yield 126 or 127. Usage errors (2) are not failures.
+on_exit() {
+    local status=$?
+    [[ -z "$tmp" ]] || rm -f -- "$tmp"
+    if [[ $status -ne 0 && $status -ne 2 && $reported -eq 0 ]]; then
+        echo "gutter: unexpected failure (status $status)" >&2
+        [[ "${GUTTER_NO_NOTIFY:-}" == 1 ]] || notify-send -a gutter -- "Gutter" "gutter: unexpected failure (status $status)" || true
+        exit 1
+    fi
+}
+trap on_exit EXIT
+
+# put_atomic <dest>: same-directory temp file from stdin, then rename over dest (-T: a directory in the way is
+# an error, not somewhere to move into). Runs in this shell, never a pipeline, so the EXIT trap sees tmp.
+put_atomic() {
+    tmp="$(mktemp "$state/.tmp.XXXXXX" 2>/dev/null)" || fail "gutter: cannot write to $state"
+    { cat >"$tmp" && chmod 644 "$tmp" && mv -fT -- "$tmp" "$1"; } 2>/dev/null || fail "gutter: cannot write $1"
+    tmp=""
+}
+
+state_ready=""
+make_state() {
+    [[ -z "$state_ready" ]] || return 0
+    mkdir -p -- "$state" 2>/dev/null || fail "gutter: cannot create $state"
+    state_ready=1
+}
+
+# reload <checksum>: `hyprctl reload`, which answers ok even when the config has errors. A reload that fails is a
+# failure, and the config's checksum is recorded as the one Hyprland has loaded only after one that ran
+# (reload_if_changed reloads when it differs, so a failed reload is tried again). The errors `hyprctl configerrors`
+# lists for Gutter's file (those that name it; errors in the user's own files are theirs) go to config_errs, not to
+# fail: the same file would fail the same way at every retry, so the stamp is written and the caller finishes its
+# work, then reports them. Errors that carry no file name, and those in the repo's own hypr/ modules, are not caught.
+# The stamp is written before that work, so a run killed during it (the shell's 60 s watchdog on an apply that hangs)
+# loses the held errors, and no later run reloads to find them until the file changes again.
+reload() {
+    local out sum="$1"
+    out="$(hyprctl reload 2>&1)" || fail "${out:-hyprctl reload failed}"
+    case "$out" in
+    "" | ok) ;;
+    *) fail "hyprctl reload: $out" ;;
+    esac
+    config_errs="$(hyprctl configerrors 2>/dev/null | grep -F -- "${hypr_out##*/}" || true)"
+    make_state
+    put_atomic "$reloaded" <<<"$sum"
+}
+
+# reload_if_changed: reload when Gutter's file differs from the one last loaded. Both apply and hypr go through
+# it, so a lasting config error is reported once per change of the file, not at every retry.
+reload_if_changed() {
+    local sum loaded=""
+    sum="$(cksum -- "$hypr_out" 2>/dev/null)" || fail "gutter: cannot read $hypr_out"
+    [[ ! -f "$reloaded" ]] || loaded="$(cat -- "$reloaded" 2>/dev/null)" || loaded=""
+    [[ "$sum" == "$loaded" ]] || reload "$sum"
+}
+
+report_config_errs() {
+    [[ -z "$config_errs" ]] || fail "Hyprland config error: $config_errs"
+}
+
+# The mode the shell is in: theme.json's, or light when it is missing or not a valid mode.
+current_mode() {
+    local mode=""
+    [[ ! -f "$theme" ]] || mode="$(python3 -c '
+import json, sys
+try:
+    mode = json.load(open(sys.argv[1]))["mode"]
+except (OSError, ValueError, KeyError, TypeError):
+    mode = ""
+print(mode if mode in ("light", "dark") else "")' "$theme" 2>/dev/null)" || mode=""
+    echo "${mode:-light}"
+}
+
+# apps <mode> <palette>: write the app configs (foot, fuzzel, GTK, Thunar, Qt, btop) and switch the running apps.
+# On failure apps.py names the apps that failed, and that is what gets printed and notified.
+apps() {
+    run "apps: failed" python3 "$tools/apps.py" --palette "$2" --mode "$1"
+}
+
+# apply <mode>: palette (a version 1 file becomes version 2), Hyprland, then theme.json, then the apps. With no
+# palette.json yet, the default palette is used, as the shell does; nothing is written in its place.
+apply() {
+    local mode="$1" pal="$palette"
+    make_state
+    if [[ -f "$palette" ]]; then
+        run "palette: cannot upgrade $palette" python3 "$tools/palette.py" --upgrade "$palette"
+    else
+        pal="$default_palette"
+    fi
+    run "hypr: failed to write the Hyprland config" \
+        python3 "$tools/hypr.py" --palette "$pal" --out "$hypr_out" --mode "$mode"
+    reload_if_changed
+    put_atomic "$theme" <<<"{\"version\": 1, \"mode\": \"$mode\"}"
+    apps "$mode" "$pal"
+    report_config_errs
+}
+
+# hypr: Hyprland's config for the mode on screen, from the live palette (hypr.py upgrades a version 1 file in
+# memory) or the default one, and the shadow setting; reloads only when the file differs from the one last loaded
+# (a failed reload is tried again), so the shell can run this at every start.
+hypr() {
+    local pal="$palette"
+    [[ -f "$palette" ]] || pal="$default_palette"
+    run "hypr: failed to write the Hyprland config" \
+        python3 "$tools/hypr.py" --palette "$pal" --out "$hypr_out" --mode "$(current_mode)"
+    reload_if_changed
+    report_config_errs
+}
+
+regen() {
+    local img=""
+    [[ ! -f "$wallpaper" ]] || IFS= read -r img <"$wallpaper" || true
+    img="${img#"${img%%[![:space:]]*}"}"
+    img="${img%"${img##*[![:space:]]}"}"
+    [[ -n "$img" ]] || fail "gutter: no wallpaper set"
+    run "palette: generator failed" python3 "$tools/palette.py" "$img" --out "$palette"
+    apply "$(current_mode)"
+}
+
+case "${1:-}" in
+wall)
+    [[ "${2:-}" == set && $# -eq 3 ]] || usage
+    [[ -f "$3" && -r "$3" ]] || { echo "gutter: not a readable file: $3" >&2; usage; }
+    img="$(realpath -s -- "$3")"
+    make_state
+    put_atomic "$wallpaper" <<<"$img"
+    regen
+    ;;
+palette)
+    [[ $# -eq 2 ]] || usage
+    case "$2" in
+    regen) regen ;;
+    default)
+        [[ -r "$default_palette" ]] || fail "gutter: cannot read $default_palette"
+        make_state
+        put_atomic "$palette" <"$default_palette"
+        apply "$(current_mode)"
+        ;;
+    *) usage ;;
+    esac
+    ;;
+theme)
+    case "${2:-}" in
+    apply)
+        [[ $# -eq 3 && ( "$3" == light || "$3" == dark ) ]] || usage
+        apply "$3"
+        ;;
+    toggle)
+        [[ $# -eq 2 ]] || usage
+        ipc themeToggle
+        ;;
+    light | dark)
+        [[ $# -eq 2 ]] || usage
+        ipc themeSet "$2"
+        ;;
+    *) usage ;;
+    esac
+    ;;
+hypr)
+    [[ $# -eq 1 ]] || usage
+    hypr
+    ;;
+*) usage ;;
+esac

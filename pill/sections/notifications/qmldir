@@ -1,0 +1,3 @@
+# Hand-listed: a section loaded with Qt.createComponent cannot list this folder on its own, so a bare
+# `import "notifications"` finds no types without it. Add a line for every file here.
+NotificationCard 1.0 NotificationCard.qml

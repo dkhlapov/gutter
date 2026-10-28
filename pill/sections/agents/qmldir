@@ -1,0 +1,7 @@
+# Hand-listed: a section loaded with Qt.createComponent cannot list this folder on its own, so a bare
+# `import "agents"` finds no types without it. Add a line for every file here.
+ActivityCard 1.0 ActivityCard.qml
+BreakdownCard 1.0 BreakdownCard.qml
+LimitsCard 1.0 LimitsCard.qml
+NowCard 1.0 NowCard.qml
+TrendCard 1.0 TrendCard.qml

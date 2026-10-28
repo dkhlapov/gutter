@@ -1,0 +1,4 @@
+# Hand-listed: a section loaded with Qt.createComponent cannot list this folder on its own, so a bare
+# `import "mixer"` finds no types without it. Add a line for every file here.
+AppStrip 1.0 AppStrip.qml
+MasterCard 1.0 MasterCard.qml
