@@ -9,6 +9,9 @@ reviews:
   auto_approvals:
     enabled: true
   suggested_reviewers: false
+  auto_review:
+    enabled: true
+    drafts: false
   finishing_touches:
     simplify:
       enabled: true
@@ -67,6 +70,3 @@ chat:
 issue_enrichment:
   auto_enrich:
     enabled: true
-  auto_review:
-    enabled: true
-    drafts: false
