@@ -526,7 +526,26 @@ TestCase {
 
     function test_otherOwnerUnknown() {
         compare(N.otherOwner(""), null);
+        compare(N.otherOwner("self=2046990\nfailed=1\n"), null);
         compare(N.otherOwner("owner=1579\ncmd=dunst\n"), null);
+    }
+
+    function test_ownerStateOther() {
+        compare(N.ownerState("self=2046990\nowner=88\ncmd=dunst \n"), "other");
+        compare(N.ownerState("self=2046990\nowner=88\n"), "other");
+    }
+
+    // Gutter holding the name, and nobody holding it, both leave no other holder.
+    function test_ownerStateNone() {
+        compare(N.ownerState("self=2046990\nowner=2046990\ncmd=qs -c gutter \n"), "none");
+        compare(N.ownerState("self=2046990\n"), "none");
+    }
+
+    // A check that could not tell (busctl failing, or no busctl at all) is not an answer.
+    function test_ownerStateUnknown() {
+        compare(N.ownerState("self=2046990\nfailed=1\n"), "unknown");
+        compare(N.ownerState(""), "unknown");
+        compare(N.ownerState("owner=1579\ncmd=dunst\n"), "unknown");
     }
 
     function test_ownerCommand() {
