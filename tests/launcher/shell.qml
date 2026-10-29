@@ -241,6 +241,32 @@ ShellRoot {
         });
     }
 
+    function launches() {
+        group("launch", () => {
+            // An app with no command is not a launch: the history stays as it was. A dry run never touches the
+            // history, so this one run is real; with no command there is nothing for it to start.
+            reset();
+            Launcher.dryRun = false;
+            try {
+                Launcher.launch({ id: "nocommand", name: "No command", command: [] });
+                Launcher.launch({ id: "emptyword", name: "Empty word", command: [""] });
+            } finally {
+                Launcher.dryRun = true;
+            }
+            expect(JSON.stringify(Launcher.usage) === "{}", "launch: an app without a command changed the history to " + JSON.stringify(Launcher.usage));
+            expect(Launcher.lastDryRun === "", "launch: an app without a command ran '" + Launcher.lastDryRun + "'");
+        });
+    }
+
+    function appRows() {
+        group("appRow", () => {
+            const both = Launcher.appRow({ id: "a", name: "A", genericName: "Web Browser", comment: "Browse the web", icon: "a" });
+            expect(both.subtitle === "Web Browser", "appRow: the subtitle is '" + both.subtitle + "', not the generic name");
+            const commentOnly = Launcher.appRow({ id: "b", name: "B", genericName: "", comment: "Does a thing", icon: "b" });
+            expect(commentOnly.subtitle === "", "appRow: a comment alone gave the subtitle '" + commentOnly.subtitle + "'");
+        });
+    }
+
     function resets() {
         group("reset", () => {
             reset();
@@ -279,6 +305,8 @@ ShellRoot {
             shell.activates();
             shell.chooses();
             shell.resets();
+            shell.launches();
+            shell.appRows();
             if (shell.failures.length) {
                 for (const f of shell.failures)
                     console.log("launcher: FAIL: " + f);

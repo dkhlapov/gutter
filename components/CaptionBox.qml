@@ -29,6 +29,10 @@ Item {
     // so changing `currentTab` never moves the box.
     readonly property real headroom: tabs.length > 0 ? Theme.pillHeight - Theme.inkWidth : 0
 
+    // How far the tabs reach from the left edge, for a window that takes input on the tabs and the box but not on the
+    // clear strip beside them.
+    readonly property real tabsWidth: Math.min(width, tabRow.implicitWidth)
+
     implicitWidth: Math.max(box.implicitWidth, tabRow.implicitWidth)
     implicitHeight: headroom + box.implicitHeight
 

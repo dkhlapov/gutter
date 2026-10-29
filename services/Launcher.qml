@@ -61,7 +61,7 @@ Singleton {
             kind: "app",
             key: app.id,
             title: app.name,
-            subtitle: app.comment || app.genericName || "",
+            subtitle: app.genericName || "",
             iconName: app.icon,
             app: app
         };
