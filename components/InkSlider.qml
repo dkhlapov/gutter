@@ -64,12 +64,18 @@ Item {
         border.width: Theme.inkWidth
     }
 
-    MouseArea {
-        id: area
+    // Pointer state, internal to the slider.
+    QtObject {
+        id: pointerState
 
         // Distance from the handle's centre to the cursor when the press landed on the handle, else 0.
         property real grabOffset: 0
+        // The wheel's fraction of a notch not yet stepped.
         property real wheelRest: 0
+    }
+
+    MouseArea {
+        id: area
 
         anchors.fill: parent
         enabled: root.interactive
@@ -81,8 +87,8 @@ Item {
                 wheel.accepted = false; // horizontal scroll switches sections
                 return;
             }
-            const r = WheelLib.accumulate(area.wheelRest, wheel.angleDelta.y);
-            area.wheelRest = r.rest;
+            const r = WheelLib.accumulate(pointerState.wheelRest, wheel.angleDelta.y);
+            pointerState.wheelRest = r.rest;
             if (r.steps !== 0)
                 root.stepped(r.steps);
         }
@@ -90,12 +96,12 @@ Item {
             const pos = root.vertical ? mouse.y : mouse.x;
             const centre = (root.vertical ? handle.y : handle.x) + root.handleShort / 2;
             // A press on the handle keeps its offset so the handle does not jump; elsewhere it jumps to the cursor.
-            area.grabOffset = Math.abs(pos - centre) <= root.handleShort / 2 ? pos - centre : 0;
-            root.moved(root.valueAt(pos - area.grabOffset));
+            pointerState.grabOffset = Math.abs(pos - centre) <= root.handleShort / 2 ? pos - centre : 0;
+            root.moved(root.valueAt(pos - pointerState.grabOffset));
         }
         onPositionChanged: mouse => {
             if (pressed)
-                root.moved(root.valueAt((root.vertical ? mouse.y : mouse.x) - area.grabOffset));
+                root.moved(root.valueAt((root.vertical ? mouse.y : mouse.x) - pointerState.grabOffset));
         }
     }
 }
