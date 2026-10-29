@@ -21,6 +21,8 @@ Rectangle {
     readonly property color textColor: lit ? Theme.on[accent] : Theme.text
     // Where the text starts, and the room it has up to the right edge (or to "Enter again").
     readonly property real iconSize: metrics.px(20)
+    // The app's icon from the theme, "" when the theme has none (or the app names none): its row shows a glyph.
+    readonly property string appIcon: row.kind === "app" ? Quickshell.iconPath(row.iconName ?? "", true) : ""
     readonly property real textX: root.metrics.pad + iconSize + root.metrics.gap
     readonly property real textRoom: Math.max(0, width - textX - root.metrics.pad - (waiting ? again.width + root.metrics.gap : 0))
 
@@ -45,21 +47,22 @@ Rectangle {
     }
 
     Image {
-        visible: root.row.kind === "app"
+        visible: root.appIcon !== ""
         x: root.metrics.pad
         anchors.verticalCenter: parent.verticalCenter
         width: root.iconSize
         height: root.iconSize
         sourceSize: Qt.size(root.iconSize, root.iconSize)
         asynchronous: true
-        source: root.row.kind === "app" ? Quickshell.iconPath(root.row.iconName, "application-x-executable") : ""
+        source: root.appIcon
     }
 
+    // A command's glyph, or an app's stand-in when the theme has no icon for it.
     InkIcon {
-        visible: root.row.kind === "command"
+        visible: root.row.kind === "command" || root.appIcon === ""
         x: root.metrics.pad + (root.iconSize - width) / 2
         anchors.verticalCenter: parent.verticalCenter
-        icon: root.row.glyph ?? ""
+        icon: root.row.kind === "command" ? root.row.glyph ?? "" : "\u{f08c6}" // md-application
         size: root.metrics.px(16)
         color: root.textColor
     }
