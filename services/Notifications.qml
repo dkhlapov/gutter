@@ -476,11 +476,14 @@ Singleton {
     property bool saveWarned: false
     // The other owner was logged (once in total, however often it is checked).
     property bool ownerWarned: false
+    // The last owner check could not tell who holds the name; `owned` is as the check before it left it.
+    property bool ownerUnknown: false
 
     // The server asks for the name when it starts; a moment later one check says whether another daemon has it.
     onWantedChanged: {
         ownerTimer.stop();
         owned = true;
+        ownerUnknown = false;
         if (wanted)
             ownerTimer.start();
         else
@@ -499,11 +502,14 @@ Singleton {
     }
 
     // The result of the owner check: another daemon holding the name is logged once, and left alone. A check that
-    // could not tell (busctl failing) leaves `owned` as it was: it must not take the note down while another daemon
-    // still holds the name, which would also stop the repeated check.
+    // could not tell (busctl failing) leaves `owned` as it was, so it cannot take the note down while another daemon
+    // still holds the name; it is tried again (ownerUnknown) instead.
     function ownerChecked(output: string): void {
         // The setting went off while the check ran.
-        if (!serverOn || NotifLib.ownerState(output) === "unknown")
+        if (!serverOn)
+            return;
+        ownerUnknown = NotifLib.ownerState(output) === "unknown";
+        if (ownerUnknown)
             return;
         const other = NotifLib.otherOwner(output);
         owned = other === null;
@@ -538,11 +544,12 @@ Singleton {
     }
 
     // While another daemon holds the name the check repeats: our server queues for the name and takes it over when
-    // the other one exits, which `owned` (and the panel's note) must follow. Stops once we own it.
+    // the other one exits, which `owned` (and the panel's note) must follow. Stops once we own it. A check that could
+    // not tell repeats too, so one failure at start-up does not leave another daemon unseen.
     Timer {
         interval: 5000
         repeat: true
-        running: root.serverOn && !root.owned && !root.inert
+        running: root.serverOn && (!root.owned || root.ownerUnknown) && !root.inert
         onTriggered: root.checkOwner()
     }
 

@@ -526,6 +526,7 @@ TestCase {
 
     function test_otherOwnerUnknown() {
         compare(N.otherOwner(""), null);
+        compare(N.otherOwner("self=2046990\nfailed=1\n"), null);
         compare(N.otherOwner("owner=1579\ncmd=dunst\n"), null);
     }
 
@@ -545,7 +546,6 @@ TestCase {
         compare(N.ownerState("self=2046990\nfailed=1\n"), "unknown");
         compare(N.ownerState(""), "unknown");
         compare(N.ownerState("owner=1579\ncmd=dunst\n"), "unknown");
-        compare(N.otherOwner("self=2046990\nfailed=1\n"), null);
     }
 
     function test_ownerCommand() {
