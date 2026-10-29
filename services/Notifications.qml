@@ -498,10 +498,12 @@ Singleton {
         }
     }
 
-    // The result of the owner check: another daemon holding the name is logged once, and left alone.
+    // The result of the owner check: another daemon holding the name is logged once, and left alone. A check that
+    // could not tell (busctl failing) leaves `owned` as it was: it must not take the note down while another daemon
+    // still holds the name, which would also stop the repeated check.
     function ownerChecked(output: string): void {
         // The setting went off while the check ran.
-        if (!serverOn)
+        if (!serverOn || NotifLib.ownerState(output) === "unknown")
             return;
         const other = NotifLib.otherOwner(output);
         owned = other === null;
