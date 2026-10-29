@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 # Runs every tests/tst_*.qml with Qt Quick Test, every tests/test_*.py with unittest, and the pill's fit
 # check (scripts/fit.sh), the transport centring check (scripts/centring.sh), the scroll bar and caption check
-# (scripts/scrollbar.sh), the shared components check (scripts/components.sh), the launcher service check (scripts/launcher.sh), the SectionHost and Theme wiring check
-# (scripts/wiring.sh), the lock's Auth and Idle checks (scripts/lock-qml.sh) and the unlock check (scripts/auth.sh, which
-# only ever uses a dummy PAM folder) in Quickshell. An empty set is a pass.
+# (scripts/scrollbar.sh), the shared components check (scripts/components.sh), the launcher service check
+# (scripts/launcher.sh), the SectionHost and Theme wiring check (scripts/wiring.sh), the lock's Auth and Idle checks
+# (scripts/lock-qml.sh) and the unlock check (scripts/auth.sh, which only ever uses a dummy PAM folder) in
+# Quickshell. An empty set is a pass.
 set -euo pipefail
 dir="$(cd "$(dirname "$0")/.." && pwd)"
 

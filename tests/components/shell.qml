@@ -51,7 +51,8 @@ ShellRoot {
     function slider() {
         const area = find(slide, i => i.cursorShape !== undefined);
         expect(area !== null, "no input area in the slider");
-        expect(area.grabOffset === undefined && area.wheelRest === undefined, "the slider's grab and wheel state is public");
+        expect(area.grabOffset === undefined && area.wheelRest === undefined
+            && slide.grabOffset === undefined && slide.wheelRest === undefined, "the slider's grab and wheel state is public");
 
         // A horizontal scroll is released to what lies beneath; a vertical one steps and is kept.
         pointer.mouseWheel(slide, 60, 11, -120, 0);
@@ -72,6 +73,33 @@ ShellRoot {
         pointer.mousePress(slide, slide.handleShort / 2, 11);
         pointer.mouseRelease(slide, slide.handleShort / 2, 11);
         expect(shell.moves.length === 1 && shell.moves[0] === 0, "a press off the handle does not jump to the cursor: " + JSON.stringify(shell.moves));
+
+        // A drag from off the handle's centre keeps the grip: the value follows the cursor's travel, not its position.
+        shell.moves = [];
+        pointer.mousePress(slide, centre + 5, 11);
+        pointer.mouseMove(slide, centre + 25, 11);
+        pointer.mouseRelease(slide, centre + 25, 11);
+        const dragged = slide.value + 20 / slide.travel;
+        expect(shell.moves.length === 2 && Math.abs(shell.moves[0] - slide.value) < 1e-9
+            && Math.abs(shell.moves[1] - dragged) < 1e-9, "a drag from off the handle's centre loses its grip: " + JSON.stringify(shell.moves));
+    }
+
+    // A wheel turn of `delta` (120 is a notch); the steps it made.
+    function wheelSteps(delta) {
+        shell.steps = 0;
+        pointer.mouseWheel(slide, 60, 11, 0, delta);
+        return shell.steps;
+    }
+
+    // Hi-res wheels send fractions of a notch: they add up to whole steps, and turning the other way drops what was
+    // left over, so a reversal never jumps (the remainder is the slider's own state, lib/wheel.js).
+    function wheelRemainder() {
+        expect(wheelSteps(30) === 0, "30 of a notch steps");
+        expect(wheelSteps(90) === 1, "30 and 90 do not make a step");
+        expect(wheelSteps(100) === 0, "100 of a notch steps");
+        expect(wheelSteps(-30) === 0, "reversing steps");
+        expect(wheelSteps(-90) === -1, "the old remainder was not dropped on reversal, or -30 and -90 do not make a step");
+        expect(wheelSteps(-20) === 0, "the remainder after a step was kept as a whole notch");
     }
 
     FloatingWindow {
@@ -174,6 +202,7 @@ ShellRoot {
             onTriggered: {
                 shell.sizing();
                 shell.slider();
+                shell.wheelRemainder();
                 if (shell.failures.length) {
                     for (const f of shell.failures)
                         console.log("components: FAIL: " + f);
