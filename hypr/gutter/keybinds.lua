@@ -95,7 +95,7 @@ bind(vars.bind_group_next, hl.dsp.group.next(), { repeating = true })
 bind(vars.bind_group_prev, hl.dsp.group.prev(), { repeating = true })
 bind(vars.bind_group_toggle, hl.dsp.group.toggle())
 bind(vars.bind_group_leave, hl.dsp.window.move({ out_of_group = true }))
-bind(vars.bind_group_lock, hl.dsp.group.lock_active({ action = "toggle" }))
+bind(vars.bind_group_lock, hl.dsp.group.lock({ action = "toggle" }))
 
 -- Windows
 for key, dir in pairs({ Left = "left", Right = "right", Up = "up", Down = "down" }) do
