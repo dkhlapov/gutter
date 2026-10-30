@@ -20,6 +20,7 @@ TestCase {
         compare(A.displayName("io.github.some.app"), "Some");
         compare(A.displayName("md.obsidian.Obsidian"), "Obsidian");
         compare(A.displayName("COM.example.Reader"), "Reader");
+        compare(A.displayName("org.desktop.app"), "org.desktop.app");
     }
 
     function test_inheritedKeysAreNotNames() {

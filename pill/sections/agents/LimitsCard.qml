@@ -16,7 +16,7 @@ CaptionBox {
     readonly property var limits: AgentUsage.limits
     readonly property bool known: limits.session !== null || limits.week !== null
     // Every window has reset since Claude Code last reported: the bars would all be empty.
-    readonly property bool allRenewed: known && [limits.session, limits.week, limits.model].filter(w => w !== null).every(w => w.renewed)
+    readonly property bool allRenewed: limits.session !== null && limits.week !== null && [limits.session, limits.week, limits.model].filter(w => w !== null).every(w => w.renewed)
     readonly property var empty: U.limitsEmpty(AgentUsage.limitsReason)
     // The reset message holds only while nothing failed: a lapsed login or a dead network is the news then.
     readonly property bool resetOnly: allRenewed && AgentUsage.limitsReason === ""

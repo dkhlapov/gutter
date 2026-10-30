@@ -922,6 +922,12 @@ TestCase {
         verify(N.fromNotification(note({ appName: "Discord", summary: "Gutter", body: "cannot run /tmp/x" }), 1, 0) !== null);
     }
 
+    function test_strayNotificationIsRecognisedWhateverItWasBefore() {
+        verify(N.isStrayNotification(note({ appName: "gutter", body: "cannot run /var/tmp/tmp.AbC123/tools/gutter" })));
+        verify(!N.isStrayNotification(note({ appName: "gutter", body: "cannot run /home/me/gutter/tools/gutter" })));
+        verify(!N.isStrayNotification(note({ appName: "Discord", body: "cannot run /tmp/x" })));
+    }
+
     function test_strayInternalErrorsAreDroppedOnRestore() {
         const keep = rec({ id: 1, appName: "gutter", body: "cannot run /home/me/gutter/tools/gutter" });
         const stray = rec({ id: 2, appName: "gutter", body: "cannot run /tmp/tmp.AbC123/tools/gutter" });

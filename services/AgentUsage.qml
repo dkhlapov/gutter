@@ -135,6 +135,9 @@ Singleton {
         onLoaded: {
             try {
                 root.bridgeFile = JSON.parse(text());
+                // A valid reading from Claude Code outdates the last failed request's reason.
+                if (root.bridgeFile?.rate_limits != null)
+                    root.limitsReason = "";
             } catch (e) {}
         }
         onLoadFailed: root.bridgeFile = null
