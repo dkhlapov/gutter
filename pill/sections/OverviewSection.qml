@@ -45,7 +45,11 @@ ColumnLayout {
 
         MediaHero {
             Layout.rowSpan: 2
-            Layout.preferredWidth: 440
+            // With nothing playing the card shrinks to its empty state and the clock, weather and levels share the room.
+            Layout.preferredWidth: Media.active !== null ? 440 : 220
+            Behavior on Layout.preferredWidth {
+                Anim {}
+            }
             Layout.fillHeight: true
         }
 

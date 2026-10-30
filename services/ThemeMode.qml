@@ -27,6 +27,9 @@ Singleton {
     readonly property bool gallery: Quickshell.env("GUTTER_GALLERY") === "1"
     // Neither applies nor saves (see above).
     readonly property bool inert: smoke || gallery
+    // The tool's own switch for check runs from a scratch root: its failures are logged but not sent to the
+    // desktop's notification history.
+    readonly property bool noNotify: Quickshell.env("GUTTER_NO_NOTIFY") === "1"
     // A `gutter theme apply` still running after this long is stopped and counted as failed.
     readonly property int applyTimeoutMs: 60000
     readonly property string tool: ShelfLib.pathFromUrl(Qt.resolvedUrl("../tools/gutter")) ?? ""
@@ -134,7 +137,7 @@ Singleton {
             return;
         lastError = message;
         console.warn(`gutter: theme: ${message}`);
-        if (f.notify)
+        if (f.notify && !noNotify)
             Quickshell.execDetached(["notify-send", "-a", "gutter", "--", "Gutter", message]);
     }
 
@@ -145,7 +148,7 @@ Singleton {
             return;
         lastHyprError = message;
         console.warn(`gutter: theme: ${message}`);
-        if (f.notify)
+        if (f.notify && !noNotify)
             Quickshell.execDetached(["notify-send", "-a", "gutter", "--", "Gutter", message]);
     }
 

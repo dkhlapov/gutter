@@ -45,8 +45,11 @@ RowLayout {
         EmptyState {
             anchors.centerIn: parent
             visible: root.streams.length === 0
-            icon: ""
+            accent: "teal"
+            icon: "\u{f057e}" // md-volume_high
+            textWidth: 280
             text: "No app is playing audio"
+            hint: "Each app that plays sound gets its own slider here."
         }
 
         ListView {

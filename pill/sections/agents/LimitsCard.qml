@@ -15,6 +15,11 @@ CaptionBox {
 
     readonly property var limits: AgentUsage.limits
     readonly property bool known: limits.session !== null || limits.week !== null
+    // Every window has reset since Claude Code last reported: the bars would all be empty.
+    readonly property bool allRenewed: limits.session !== null && limits.week !== null && [limits.session, limits.week, limits.model].filter(w => w !== null).every(w => w.renewed)
+    readonly property var empty: U.limitsEmpty(AgentUsage.limitsReason)
+    // The reset message holds only while nothing failed: a lapsed login or a dead network is the news then.
+    readonly property bool resetOnly: allRenewed && AgentUsage.limitsReason === ""
 
     tabs: [
         {
@@ -67,7 +72,7 @@ CaptionBox {
         anchors.fill: parent
         anchors.margins: Theme.pad
         spacing: Theme.gap
-        visible: root.known
+        visible: root.known && !root.allRenewed
 
         Repeater {
             model: root.known ? (root.limits.model !== null ? 3 : 2) : 0
@@ -76,7 +81,7 @@ CaptionBox {
                 id: row
 
                 required property int index
-                readonly property var modelData: index === 0 ? { label: "Session", span: 5 * 3600 } : index === 1 ? { label: "Week", span: 7 * 86400 } : { label: root.limits.model?.name ?? "", span: 7 * 86400 }
+                readonly property var modelData: ({ label: U.windowLabel(index, root.limits.model?.name ?? ""), span: index === 0 ? 5 * 3600 : 7 * 86400 })
                 readonly property var w: index === 0 ? root.limits.session : index === 1 ? root.limits.week : root.limits.model
 
                 Layout.fillWidth: true
@@ -91,6 +96,8 @@ CaptionBox {
                         text: row.modelData.label
                         font.pixelSize: 12
                         font.bold: true
+                        elide: Text.ElideRight
+                        Layout.maximumWidth: rows.width * 0.6
                     }
 
                     InkIcon {
@@ -102,7 +109,7 @@ CaptionBox {
 
                     InkText {
                         Layout.fillWidth: true
-                        text: row.w === null ? "" : row.w.renewed ? "No recent data" : row.w.resetsIn > 0 ? U.duration(row.w.resetsIn) : ""
+                        text: row.w === null ? "" : row.w.renewed ? "Reset · waiting for new data" : row.w.resetsIn > 0 ? U.duration(row.w.resetsIn) : ""
                         font.pixelSize: 11
                         elide: Text.ElideRight
                         opacity: 0.7
@@ -139,28 +146,14 @@ CaptionBox {
         }
     }
 
-    Column {
+    EmptyState {
         anchors.centerIn: parent
-        width: parent.width - 2 * Theme.pad
-        visible: !root.known
-        spacing: 3
-
-        InkText {
-            width: parent.width
-            horizontalAlignment: Text.AlignHCenter
-            text: "No plan limits yet"
-            font.pixelSize: 13
-            font.bold: true
-        }
-
-        InkText {
-            width: parent.width
-            horizontalAlignment: Text.AlignHCenter
-            wrapMode: Text.WordWrap
-            maximumLineCount: 3
-            text: "They load from your Claude login every few minutes (Pro and Max plans only)"
-            font.pixelSize: 11
-            opacity: 0.75
-        }
+        visible: !root.known || root.allRenewed
+        compact: true
+        textWidth: Math.max(0, root.width - 2 * Theme.pad - 44 - Theme.pad)
+        accent: "magenta"
+        icon: "\u{f0150}" // md-clock_outline
+        text: root.resetOnly ? "Limits have reset" : root.empty.title
+        hint: root.resetOnly ? "A new window has started. Usage appears with the next reading." : root.empty.hint
     }
 }

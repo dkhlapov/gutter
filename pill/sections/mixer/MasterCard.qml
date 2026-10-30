@@ -75,10 +75,12 @@ CaptionBox {
                 font.bold: true
             }
 
+            // Nothing to say while it is quiet (the empty Apps card beside it says why); the line keeps its room so
+            // the level above does not jump when an app starts.
             InkText {
-                text: Audio.muted ? "Muted" : root.streamCount === 0 ? "Idle" : `${root.streamCount} playing`
+                opacity: Audio.muted || root.streamCount > 0 ? 0.75 : 0
+                text: Audio.muted ? "Muted" : `${root.streamCount} playing`
                 font.pixelSize: 12
-                opacity: 0.75
             }
         }
     }

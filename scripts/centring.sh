@@ -4,6 +4,8 @@
 # scripts/fit.sh, it runs from a scratch config root that links the repo's folders, with the Media service in
 # tests/centring/stubs standing in for the real one.
 set -uo pipefail
+# A scratch root has no tools/gutter: ThemeMode would report "cannot run" to the real desktop.
+export GUTTER_NO_NOTIFY=1
 dir="$(cd "$(dirname "$0")/.." && pwd)"
 root="$(mktemp -d)"
 log="$root/log"

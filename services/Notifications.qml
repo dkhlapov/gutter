@@ -95,8 +95,12 @@ Singleton {
     function ingest(n: var): void {
         const known = idFor(n);
         const rec = NotifLib.fromNotification(n, known || next, Date.now());
-        if (!rec)
+        if (!rec) {
+            // An app that turned a notification we kept into a stray one in an update: the record goes too.
+            if (known && NotifLib.isStrayNotification(n))
+                dismiss(known);
             return;
+        }
         // An update to a record that is already in the history stays there instead of becoming a bubble-only
         // transient: a record kept for a reply (see keepTransient) would be released with its bubble, and the
         // reply with it. So an app turning a normal notification transient in an update also stays in the history.
@@ -161,7 +165,18 @@ Singleton {
             ingest(n);
             return;
         }
-        const entry = NotifLib.adoptEntry(old, NotifLib.fromNotification(n, old.id, old.at));
+        const fresh = NotifLib.fromNotification(n, old.id, old.at);
+        if (!fresh && NotifLib.isStrayNotification(n)) {
+            dismiss(old.id);
+            // The record is gone and the reload has not made `n` live yet, so dismiss cannot reach it: let it go here.
+            try {
+                n.expire();
+            } catch (e) {
+                console.warn(`gutter: notifications: cannot expire: ${e}`);
+            }
+            return;
+        }
+        const entry = NotifLib.adoptEntry(old, fresh);
         liveById[old.id] = n;
         history = history.map(h => h === old ? entry : h);
     }

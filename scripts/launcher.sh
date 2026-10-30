@@ -5,6 +5,8 @@
 # it runs from a scratch config root that links the repo's folders, the services being the real ones. The state
 # directory is the scratch one, and a dry run runs no action.
 set -uo pipefail
+# A scratch root has no tools/gutter: ThemeMode would report "cannot run" to the real desktop.
+export GUTTER_NO_NOTIFY=1
 dir="$(cd "$(dirname "$0")/.." && pwd)"
 root="$(mktemp -d)"
 log="$root/log"
