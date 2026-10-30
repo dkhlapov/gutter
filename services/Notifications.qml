@@ -368,14 +368,27 @@ Singleton {
             leaveQueue(currentId);
             return;
         }
-        if (record.transient)
-            shown = NotifLib.shownAdd(shown, record.serverId);
         Activities.show("notification", NotifLib.priority(record), 0, "notifications");
+        markShown();
         bubbleTimer.interval = NotifLib.duration(record);
         bubbleTimer.stop();
         if (!bubbleHovered)
             bubbleTimer.start();
     }
+
+    // The bubble of a transient notification is up, so a reload lets that one go (see adopt). Only while the pill shows
+    // it: a higher-priority HUD can hold the pill, and the bubble waits behind it unseen.
+    function markShown(): void {
+        if (!bubbleOnPill)
+            return;
+        const record = recordFor(currentId);
+        if (record?.transient)
+            shown = NotifLib.shownAdd(shown, record.serverId);
+    }
+
+    readonly property bool bubbleOnPill: Activities.current?.id === "notification"
+
+    onBubbleOnPillChanged: markShown()
 
     readonly property bool screenLocked: !NotifLib.bubblesAllowed(Lock.locked, Lock.preview)
 
