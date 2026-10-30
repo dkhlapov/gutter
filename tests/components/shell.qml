@@ -52,7 +52,8 @@ ShellRoot {
         const area = find(slide, i => i.cursorShape !== undefined);
         expect(area !== null, "no input area in the slider");
         expect(area.grabOffset === undefined && area.wheelRest === undefined
-            && slide.grabOffset === undefined && slide.wheelRest === undefined, "the slider's grab and wheel state is public");
+            && slide.grabOffset === undefined && slide.wheelRest === undefined,
+            "the slider's grab and wheel state is public");
 
         // A horizontal scroll is released to what lies beneath; a vertical one steps and is kept.
         pointer.mouseWheel(slide, 60, 11, -120, 0);
@@ -72,7 +73,8 @@ ShellRoot {
         shell.moves = [];
         pointer.mousePress(slide, slide.handleShort / 2, 11);
         pointer.mouseRelease(slide, slide.handleShort / 2, 11);
-        expect(shell.moves.length === 1 && shell.moves[0] === 0, "a press off the handle does not jump to the cursor: " + JSON.stringify(shell.moves));
+        expect(shell.moves.length === 1 && shell.moves[0] === 0,
+            "a press off the handle does not jump to the cursor: " + JSON.stringify(shell.moves));
 
         // A drag from off the handle's centre keeps the grip: the value follows the cursor's travel, not its position.
         shell.moves = [];
@@ -81,7 +83,8 @@ ShellRoot {
         pointer.mouseRelease(slide, centre + 25, 11);
         const dragged = slide.value + 20 / slide.travel;
         expect(shell.moves.length === 2 && Math.abs(shell.moves[0] - slide.value) < 1e-9
-            && Math.abs(shell.moves[1] - dragged) < 1e-9, "a drag from off the handle's centre loses its grip: " + JSON.stringify(shell.moves));
+            && Math.abs(shell.moves[1] - dragged) < 1e-9,
+            "a drag from off the handle's centre loses its grip: " + JSON.stringify(shell.moves));
     }
 
     // A wheel turn of `delta` (120 is a notch); the steps it made.
@@ -98,7 +101,8 @@ ShellRoot {
         expect(wheelSteps(90) === 1, "30 and 90 do not make a step");
         expect(wheelSteps(100) === 0, "100 of a notch steps");
         expect(wheelSteps(-30) === 0, "reversing steps");
-        expect(wheelSteps(-90) === -1, "the old remainder was not dropped on reversal, or -30 and -90 do not make a step");
+        expect(wheelSteps(-90) === -1,
+            "the old remainder was not dropped on reversal, or -30 and -90 do not make a step");
         expect(wheelSteps(-20) === 0, "the remainder after a step was kept as a whole notch");
     }
 
@@ -196,13 +200,64 @@ ShellRoot {
             when: false
         }
 
+        // What had the keyboard focus before a tray menu opened, and the Loader the menu comes and goes with (as in
+        // bar/TrayRow.qml, the menu being destroyed when the Loader goes inactive).
+        Item {
+            id: holder
+
+            x: 200
+            y: 200
+            width: 20
+            height: 20
+            focus: true
+        }
+
+        Loader {
+            id: menuLoader
+
+            active: false
+            sourceComponent: InkMenu {
+                menu: null
+                width: 120
+                height: 60
+            }
+        }
+
+        // The steps run one timer tick apart: a Loader destroys its item later, not at once.
         Timer {
-            interval: 400
-            running: true
+            id: menuSteps
+
+            property int next: 0
+            readonly property var steps: [
+                () => {
+                    holder.forceActiveFocus();
+                    shell.expect(holder.activeFocus, "the focus holder is not focused (the window is not active)");
+                    menuLoader.active = true;
+                },
+                () => {
+                    shell.expect(menuLoader.item?.activeFocus === true, "an open menu does not take the focus");
+                    menuLoader.active = false;
+                },
+                () => {
+                    shell.expect(menuLoader.item === null, "the menu outlives its Loader going inactive");
+                    shell.expect(holder.activeFocus, "the focus does not return when the Loader tears the menu down");
+                    menuLoader.active = true;
+                },
+                () => {
+                    shell.expect(menuLoader.item?.activeFocus === true, "a reopened menu does not take the focus");
+                    menuLoader.item.visible = false;
+                },
+                () => shell.expect(holder.activeFocus, "the focus does not return when the menu is hidden")
+            ]
+
+            interval: 100
+            repeat: true
             onTriggered: {
-                shell.sizing();
-                shell.slider();
-                shell.wheelRemainder();
+                if (next < steps.length) {
+                    steps[next++]();
+                    return;
+                }
+                stop();
                 if (shell.failures.length) {
                     for (const f of shell.failures)
                         console.log("components: FAIL: " + f);
@@ -210,6 +265,17 @@ ShellRoot {
                     console.log("components: OK (" + shell.checks + " checks)");
                 }
                 Qt.quit();
+            }
+        }
+
+        Timer {
+            interval: 400
+            running: true
+            onTriggered: {
+                shell.sizing();
+                shell.slider();
+                shell.wheelRemainder();
+                menuSteps.start();
             }
         }
     }
