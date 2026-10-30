@@ -191,7 +191,7 @@ Item {
                 icon: "\uf075"
                 text: "No lyrics"
                 textWidth: 220
-                hint: Media.playing ? "None found for this track." : "Lyrics load while the track plays."
+                hint: Media.playing ? "None found yet for this track." : "Lyrics load while the track plays."
             }
         }
     }

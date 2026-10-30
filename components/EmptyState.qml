@@ -47,7 +47,7 @@ Item {
         id: layout
 
         anchors.centerIn: parent
-        columns: root.compact ? 2 : 1
+        columns: root.compact ? (root.actionText !== "" ? 3 : 2) : 1
         columnSpacing: Theme.pad
         rowSpacing: 6
         horizontalItemAlignment: root.compact ? Grid.AlignLeft : Grid.AlignHCenter

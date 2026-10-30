@@ -10,12 +10,15 @@ TestCase {
         compare(A.displayName("COM.ANTHROPIC.CLAUDE"), "Claude");
         compare(A.displayName("org.telegram.desktop"), "Telegram");
         compare(A.displayName("gutter"), "Gutter");
+        compare(A.displayName("org.kde.dolphin"), "Dolphin");
+        compare(A.displayName("io.github.shiftey.Desktop"), "GitHub Desktop");
     }
 
     function test_reverseDns() {
         compare(A.displayName("org.gnome.Calculator"), "Calculator");
         compare(A.displayName("com.github.wwmm.easyeffects"), "Easyeffects");
         compare(A.displayName("io.github.some.app"), "Some");
+        compare(A.displayName("md.obsidian.Obsidian"), "Obsidian");
     }
 
     function test_inheritedKeysAreNotNames() {

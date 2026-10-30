@@ -18,6 +18,8 @@ CaptionBox {
     // Every window has reset since Claude Code last reported: the bars would all be empty.
     readonly property bool allRenewed: known && [limits.session, limits.week, limits.model].filter(w => w !== null).every(w => w.renewed)
     readonly property var empty: U.limitsEmpty(AgentUsage.limitsReason)
+    // The reset message holds only while nothing failed: a lapsed login or a dead network is the news then.
+    readonly property bool resetOnly: allRenewed && AgentUsage.limitsReason === ""
 
     tabs: [
         {
@@ -151,7 +153,7 @@ CaptionBox {
         textWidth: Math.max(0, root.width - 2 * Theme.pad - 44 - Theme.pad)
         accent: "magenta"
         icon: "\u{f0150}" // md-clock_outline
-        text: root.allRenewed ? "Limits have reset" : root.empty.title
-        hint: root.allRenewed ? "A new window has started. Usage appears with the next reading." : root.empty.hint
+        text: root.resetOnly ? "Limits have reset" : root.empty.title
+        hint: root.resetOnly ? "A new window has started. Usage appears with the next reading." : root.empty.hint
     }
 }
