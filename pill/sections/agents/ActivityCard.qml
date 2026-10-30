@@ -45,7 +45,7 @@ CaptionBox {
             id: gridColumn
 
             Layout.alignment: Qt.AlignVCenter
-            spacing: 4
+            spacing: 2
 
             Grid {
                 id: grid

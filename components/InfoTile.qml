@@ -16,7 +16,7 @@ Rectangle {
     Layout.fillWidth: true
     Layout.fillHeight: true
     implicitWidth: 80
-    implicitHeight: column.implicitHeight + (large ? 16 : 10) + 2 * Theme.inkWidth
+    implicitHeight: column.implicitHeight + (large ? 16 : 6) + 2 * Theme.inkWidth
     color: tone
     border.color: Theme.ink
     border.width: Theme.inkWidth
