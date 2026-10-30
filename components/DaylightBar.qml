@@ -11,6 +11,8 @@ ColumnLayout {
     property string riseText
     property string setText
     property color ink: Theme.text
+    // Fixed pixels, like Theme.pillHeight and Theme.glyphSize: the shell has no UI scale, so there is nothing for these to
+    // follow. If one is ever added, these move to Theme tokens with the rest.
     readonly property real trackHeight: 14
     readonly property real markerSize: 20
     readonly property real rowHeight: 22

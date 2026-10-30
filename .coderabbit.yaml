@@ -3,12 +3,23 @@
 language: "en-US"
 
 reviews:
-  profile: "chill"
-  high_level_summary: true
-
+  profile: assertive
+  auto_apply_labels: true
+  in_progress_fortune: false
+  auto_approvals:
+    enabled: true
+  suggested_reviewers: false
   auto_review:
     enabled: true
     drafts: false
+  finishing_touches:
+    simplify:
+      enabled: true
+    docstrings:
+      enabled: false
+    unit_tests:
+      enabled: false
+  request_changes_workflow: true
 
   path_filters:
     # Compiled shaders; review the .frag sources instead.
@@ -54,11 +65,8 @@ reviews:
         Tests must not touch the real HOME, state files or running shell. Python tests use unittest, QML tests use
         Qt Quick Test (tst_*.qml).
 
-  finishing_touches:
-    docstrings:
-      enabled: false
-    unit_tests:
-      enabled: false
-
 chat:
-  auto_reply: true
+  art: false
+issue_enrichment:
+  auto_enrich:
+    enabled: true
