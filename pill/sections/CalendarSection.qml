@@ -165,11 +165,13 @@ Item {
                     }
 
                     InkButton {
+                        accessibleName: "Previous month"
                         icon: ""
                         onClicked: root.shift(-1)
                     }
 
                     InkButton {
+                        accessibleName: "Next month"
                         icon: ""
                         onClicked: root.shift(1)
                     }

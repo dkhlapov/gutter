@@ -12,6 +12,7 @@ ColumnLayout {
     spacing: 2
 
     SeekBar {
+        accessibleName: "Seek"
         id: bar
 
         Layout.fillWidth: true

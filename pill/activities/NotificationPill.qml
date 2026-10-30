@@ -121,6 +121,9 @@ Item {
                 Item {
                     Layout.preferredWidth: 24
                     Layout.preferredHeight: 24
+                    Accessible.role: Accessible.Button
+                    Accessible.name: "Dismiss notification"
+                    Accessible.onPressAction: Notifications.dismissBubble()
 
                     InkIcon {
                         anchors.centerIn: parent

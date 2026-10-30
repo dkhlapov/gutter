@@ -82,6 +82,7 @@ CaptionBox {
         }
 
         InkButton {
+            accessibleName: "Camera mirror"
             anchors.right: parent.right
             anchors.bottom: parent.bottom
             anchors.rightMargin: Theme.pad + Theme.shadowOffset
@@ -92,6 +93,7 @@ CaptionBox {
             icon: root.on ? "\u{f0568}" : "\u{f0567}"
             iconSize: 18
             checked: root.on
+            checkable: true
             accent: root.on ? "" : "pink"
             onClicked: root.on = !root.on
         }

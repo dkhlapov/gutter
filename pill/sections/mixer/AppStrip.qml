@@ -68,6 +68,7 @@ InkBox {
         }
 
         InkSlider {
+            accessibleName: `${root.info?.app || "App"} volume`
             Layout.alignment: Qt.AlignHCenter
             Layout.fillHeight: true
             vertical: true
@@ -80,12 +81,14 @@ InkBox {
         }
 
         InkButton {
+            accessibleName: `Mute ${root.info?.app || "App"}`
             Layout.alignment: Qt.AlignHCenter
             Layout.preferredHeight: 26
             Layout.rightMargin: Theme.shadowOffset
             icon: Glyphs.glyph(VolumeLib.icon(root.level, root.muted))
             iconSize: 14
             checked: root.muted
+            checkable: true
             enabled: root.audio !== null
             onClicked: if (root.audio)
                 root.audio.muted = !root.audio.muted

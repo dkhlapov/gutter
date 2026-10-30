@@ -103,5 +103,51 @@ class TextSize(unittest.TestCase):
         self.assertEqual(found, [], "secondary text dims itself with opacity; use color: Theme.textMuted")
 
 
+# Shared components with a pointer area that name themselves elsewhere: "file: where".
+ACCESSIBLE_ELSEWHERE = {
+    "components/CaptionBox.qml": "its tabs are LabelTabs, which carry the role and the name",
+    "components/InkScrollBar.qml": "a scroll bar is no control a screen reader needs: the scrolled view is",
+    "components/InkMenu.qml": "a frame for InkMenuList, whose entries carry the role and the name",
+}
+
+
+class AccessibleMetadata(unittest.TestCase):
+    def test_every_shared_interactive_component_has_a_role_and_a_name(self):
+        missing = []
+        for path in sorted((ROOT / "components").glob("*.qml")):
+            rel = path.relative_to(ROOT).as_posix()
+            text = path.read_text()
+            if "MouseArea" not in text or rel in ACCESSIBLE_ELSEWHERE:
+                continue
+            for what in ("Accessible.role", "Accessible.name"):
+                if what not in text:
+                    missing.append(f"{rel}: no {what}")
+        self.assertEqual(missing, [])
+
+    def test_every_use_of_an_unnamed_control_names_it(self):
+        """A slider, a seek bar or an icon-only button has no text of its own to be named by."""
+        found = []
+        for path in qml_files():
+            rel = path.relative_to(ROOT).as_posix()
+            text = path.read_text()
+            for head, needs in (("InkSlider", lambda b: True), ("SeekBar", lambda b: True),
+                                ("InkButton", lambda b: re.search(r"^\s*icon:", b, re.M) and not re.search(r"^\s*text:", b, re.M))):
+                for n, body in blocks(text, head):
+                    props = "\n".join(own_lines(body))
+                    if needs(props) and "accessibleName" not in props:
+                        found.append(f"{rel}:{n}: {head} has no accessibleName")
+        self.assertEqual(found, [])
+
+    def test_every_bar_cell_has_a_name(self):
+        found = []
+        for path in sorted((ROOT / "bar").glob("*.qml")):
+            text = path.read_text()
+            for n, body in blocks(text, "Segment"):
+                props = "\n".join(own_lines(body))
+                if not re.search(r"^\s*accessibleName:", props, re.M):
+                    found.append(f"{path.relative_to(ROOT)}:{n}: Segment has no accessibleName")
+        self.assertEqual(found, [])
+
+
 if __name__ == "__main__":
     unittest.main()

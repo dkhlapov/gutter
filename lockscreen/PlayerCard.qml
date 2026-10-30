@@ -71,6 +71,7 @@ InkBox {
             spacing: Math.round(4 * root.ui)
 
             InkButton {
+                accessibleName: "Previous track"
                 width: root.button
                 height: root.button
                 icon: ""
@@ -79,6 +80,7 @@ InkBox {
             }
 
             InkButton {
+                accessibleName: Media.playing ? "Pause" : "Play"
                 width: root.button
                 height: root.button
                 icon: Media.playing ? "" : ""
@@ -88,6 +90,7 @@ InkBox {
             }
 
             InkButton {
+                accessibleName: "Next track"
                 width: root.button
                 height: root.button
                 icon: ""

@@ -123,12 +123,15 @@ CaptionBox {
             }
 
             InkButton {
+                accessibleName: "Pin"
                 icon: ""
                 checked: root.item?.pinned ?? false
+                checkable: true
                 onClicked: Clipboard.togglePin(root.item.id)
             }
 
             InkButton {
+                accessibleName: "Delete"
                 icon: ""
                 onClicked: Clipboard.remove(root.item.id)
             }

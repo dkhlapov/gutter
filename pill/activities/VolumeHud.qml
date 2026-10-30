@@ -25,6 +25,7 @@ RowLayout {
     }
 
     InkSlider {
+        accessibleName: "Volume"
         Layout.preferredWidth: 190
         interactive: false
         accent: root.accent

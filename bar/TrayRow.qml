@@ -67,6 +67,7 @@ Row {
 
             required property var modelData
 
+            accessibleName: Tray.name(cell.modelData)
             contentWidth: Theme.appIconSize
             accent: Theme.roleAccent.active
             down: root.menuVisible && root.openItem === cell.modelData

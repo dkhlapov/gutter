@@ -131,6 +131,7 @@ InkBox {
     }
 
     InkButton {
+        accessibleName: "Remove from shelf"
         x: parent.width - width - 14
         y: 14
         width: 26

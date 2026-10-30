@@ -11,6 +11,8 @@ Item {
     property color accent: Theme.accent.pink
     // Off: the bar only shows `position`, the pointer does nothing.
     property bool interactive: true
+    // What a screen reader calls the bar ("Seek").
+    property string accessibleName
 
     readonly property real thumbSize: 20
     readonly property real trackThickness: 12
@@ -35,6 +37,10 @@ Item {
     }
 
     implicitHeight: thumbSize + 4
+
+    Accessible.role: interactive ? Accessible.Slider : Accessible.ProgressBar
+    Accessible.name: accessibleName
+    Accessible.description: `${Math.round(fraction * 100)}%`
 
     Rectangle {
         id: track

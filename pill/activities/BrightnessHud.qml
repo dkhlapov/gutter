@@ -22,6 +22,7 @@ RowLayout {
     }
 
     InkSlider {
+        accessibleName: "Brightness"
         Layout.preferredWidth: 190
         interactive: false
         accent: root.accent

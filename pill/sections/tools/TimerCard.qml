@@ -86,6 +86,7 @@ CaptionBox {
                     Layout.preferredWidth: 1
                     text: `${modelData}m`
                     checked: Timers.timer.durationMs === modelData * 60000 && Timers.timer.state !== "idle"
+                    checkable: true
                     onClicked: Timers.startTimer(modelData)
                 }
             }
@@ -141,11 +142,13 @@ CaptionBox {
             spacing: 14
 
             InkButton {
+                accessibleName: "Reset"
                 icon: "\u{f0709}"
                 onClicked: root.stopwatch ? Timers.resetStopwatch() : Timers.resetTimer()
             }
 
             InkButton {
+                accessibleName: root.running ? "Pause" : "Start"
                 Layout.preferredWidth: 64
                 Layout.preferredHeight: 46
                 icon: root.running ? "\u{f03e4}" : "\u{f040a}"
@@ -163,6 +166,7 @@ CaptionBox {
 
             // +1 min on the timer, lap on the stopwatch.
             InkButton {
+                accessibleName: root.stopwatch ? "Lap" : "Add one minute"
                 icon: root.stopwatch ? "\u{f023b}" : "\u{f1ae2}"
                 onClicked: root.stopwatch ? Timers.lap() : Timers.addMinute()
             }

@@ -84,12 +84,13 @@ Item {
                     caption: root.captioned
                     halftone: root.currentHalftone && tab.active
                     z: tab.active ? 1 : 0
+                    onActivated: root.tabClicked(tab.index)
 
                     MouseArea {
                         anchors.fill: parent
                         enabled: !root.captioned
                         cursorShape: Qt.PointingHandCursor
-                        onClicked: root.tabClicked(tab.index)
+                        onClicked: tab.activated()
                     }
                 }
             }

@@ -203,6 +203,9 @@ Item {
                     objectName: "dismissButton"
                     Layout.preferredWidth: 24
                     Layout.preferredHeight: 24
+                    Accessible.role: Accessible.Button
+                    Accessible.name: "Dismiss notification"
+                    Accessible.onPressAction: Notifications.dismiss(root.rid)
 
                     InkIcon {
                         anchors.centerIn: parent
@@ -301,6 +304,8 @@ Item {
                             TextInput {
                                 id: field
 
+                                Accessible.role: Accessible.EditableText
+                                Accessible.name: root.rec?.replyPlaceholder || "Reply"
                                 anchors.left: parent.left
                                 anchors.leftMargin: Theme.pad
                                 anchors.right: parent.right

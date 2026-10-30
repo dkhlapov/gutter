@@ -94,6 +94,7 @@ Item {
         }
 
         Segment {
+            accessibleName: "Power menu"
             icon: "\u{f0425}" // md-power
             accent: "coral"
             down: root.powerOpen

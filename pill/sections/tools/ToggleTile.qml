@@ -33,6 +33,7 @@ Item {
 
         anchors.fill: parent
         checked: root.lit
+        checkable: true
         enabled: root.available
         onClicked: root.clicked()
     }

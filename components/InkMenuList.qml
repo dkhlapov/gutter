@@ -47,6 +47,13 @@ Column {
                 readonly property bool lit: !slot.modelData.isSeparator && slot.modelData.enabled && area.containsMouse
                 readonly property color textColor: lit ? Theme.on[list.accent] : Theme.text
 
+                // Separators are no entries; a submenu entry expands, any other triggers.
+                Accessible.role: slot.modelData.isSeparator ? Accessible.Separator : Accessible.MenuItem
+                Accessible.name: slot.modelData.isSeparator ? "" : slot.modelData.text
+                Accessible.checkable: slot.modelData.buttonType !== QsMenuButtonType.None
+                Accessible.checked: slot.modelData.checkState === Qt.Checked
+                Accessible.onPressAction: area.clicked(null)
+
                 width: parent.width
                 height: slot.modelData.isSeparator ? Theme.inkWidth + Theme.gap : Theme.pillHeight - Theme.inkWidth
                 color: lit ? Theme.accent[list.accent] : Theme.paper

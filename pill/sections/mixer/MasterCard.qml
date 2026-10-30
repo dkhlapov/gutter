@@ -27,6 +27,7 @@ CaptionBox {
         spacing: Theme.pad
 
         InkSlider {
+            accessibleName: "Volume"
             Layout.fillHeight: true
             vertical: true
             accent: MixerLib.MASTER_ACCENT
@@ -51,6 +52,7 @@ CaptionBox {
                 iconSize: 18
                 text: Audio.muted ? "Muted" : "Mute"
                 checked: Audio.muted
+                checkable: true
                 enabled: Audio.ready
                 onClicked: Audio.toggleMute()
             }

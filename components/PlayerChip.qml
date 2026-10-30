@@ -12,6 +12,7 @@ InkButton {
     icon: root.player?.isPlaying ? "" : ""
     text: root.player?.identity ?? ""
     checked: highlighted
+    checkable: true
     onClicked: {
         if (root.player)
             Media.select(root.player.dbusName);
