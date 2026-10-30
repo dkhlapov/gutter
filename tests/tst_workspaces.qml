@@ -203,4 +203,11 @@ TestCase {
         WS.syncList(m, [], "id");
         compare(m.rows.length, 0);
     }
+    function test_sync_list_ignores_key_order() {
+        const m = fakeModel();
+        WS.syncList(m, [{ a: 1, b: { y: 2, x: [3, { q: 1, p: 2 }] } }], "cell");
+        m.calls = [];
+        WS.syncList(m, [{ b: { x: [3, { p: 2, q: 1 }], y: 2 }, a: 1 }], "cell");
+        compare(m.calls, []);
+    }
 }
