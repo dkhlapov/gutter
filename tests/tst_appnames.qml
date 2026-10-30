@@ -19,6 +19,7 @@ TestCase {
         compare(A.displayName("com.github.wwmm.easyeffects"), "Easyeffects");
         compare(A.displayName("io.github.some.app"), "Some");
         compare(A.displayName("md.obsidian.Obsidian"), "Obsidian");
+        compare(A.displayName("COM.example.Reader"), "Reader");
     }
 
     function test_inheritedKeysAreNotNames() {
