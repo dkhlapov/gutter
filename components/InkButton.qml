@@ -1,7 +1,9 @@
 import QtQuick
 import qs.theme
 
-// A flat button with a hard shadow. Pressed (or checked) it drops onto its shadow, which then disappears.
+// A flat button with a hard shadow. Pressed (or checked) it drops onto its shadow, which then disappears. Checked,
+// it also fills with the active role's colour, the same "on" in every section; an explicit accent wins, and is
+// for identity (a button of a section's own colour), not state.
 Item {
     id: root
 
@@ -11,6 +13,8 @@ Item {
     property string text
     property string accent: ""
     property bool checked: false
+    // The accent the face is drawn in: the explicit one, else the active role's while checked, else paper.
+    readonly property string face: !enabled ? "" : accent !== "" ? accent : checked ? Theme.roleAccent.active : ""
     // True while pressed or checked; can be forced to show the pressed look.
     property bool down: area.pressed || checked
 
@@ -34,14 +38,14 @@ Item {
         width: parent.width
         height: parent.height
         // Disabled: flat paper, no shadow, outline kept; the text and icon are dimmed (not the surface).
-        color: root.accent === "" || !root.enabled ? Theme.paper : Theme.accent[root.accent]
+        color: root.face === "" ? Theme.paper : Theme.accent[root.face]
         border.color: Theme.ink
         border.width: Theme.inkWidth
 
         Row {
             id: row
 
-            readonly property color textColor: root.accent === "" || !root.enabled ? Theme.text : Theme.on[root.accent]
+            readonly property color textColor: root.face === "" ? Theme.text : Theme.on[root.face]
 
             anchors.centerIn: parent
             spacing: Theme.gap

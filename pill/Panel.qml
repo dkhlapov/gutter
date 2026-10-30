@@ -18,11 +18,11 @@ CaptionBox {
             calendar: "teal",
             system: "lime",
             weather: "navy",
-            tools: "coral",
+            tools: "pink",
             agents: "magenta",
             mixer: "teal",
             clipboard: "lime",
-            shelf: "coral",
+            shelf: "navy",
             notifications: "sun"
         })
 
