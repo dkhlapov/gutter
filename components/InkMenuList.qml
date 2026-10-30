@@ -52,8 +52,12 @@ Column {
                 Accessible.name: slot.modelData.isSeparator ? "" : slot.modelData.text
                 Accessible.checkable: slot.modelData.buttonType !== QsMenuButtonType.None
                 Accessible.checked: slot.modelData.checkState === Qt.Checked
+                Accessible.expandable: slot.modelData.hasChildren
+                Accessible.expanded: slot.expanded
                 Accessible.onPressAction: row.activate()
 
+                // A disabled entry reads as disabled to a screen reader as well.
+                enabled: slot.modelData.enabled
                 width: parent.width
                 height: slot.modelData.isSeparator ? Theme.inkWidth + Theme.gap : Theme.pillHeight - Theme.inkWidth
                 color: lit ? Theme.accent[list.accent] : Theme.paper
