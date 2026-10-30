@@ -115,12 +115,11 @@ InkBox {
 
         InkText {
             width: parent.width
-            // A missing file's name is faded; its subtitle ("File is gone") stays whole for contrast.
-            opacity: root.gone ? 0.6 : 1
             text: ShelfLib.baseName(root.path)
             font.bold: true
             elide: Text.ElideMiddle
-            color: root.lit ? Theme.on.sun : Theme.text
+            // A missing file's name is softer, in the muted colour (never a fade, which would break the contrast).
+            color: root.lit ? Theme.on.sun : root.gone ? Theme.textMuted : Theme.text
         }
 
         InkText {
@@ -132,7 +131,7 @@ InkBox {
     }
 
     InkButton {
-        accessibleName: "Remove from shelf"
+        accessibleName: `Remove ${ShelfLib.baseName(root.path)} from shelf`
         x: parent.width - width - 14
         y: 14
         width: 26

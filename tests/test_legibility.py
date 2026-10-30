@@ -92,8 +92,7 @@ class TextSize(unittest.TestCase):
                 expr = re.sub(r"Math\.round\(Theme\.textMin \* root\.ui\)", "", m.group(1))
                 if re.search(r"Theme\.textMin\s*-", expr):
                     found.append(f"{rel}:{n}: {line.strip()}")
-                elif "Theme.textMin" not in m.group(1) and \
-                        any(int(v) < floor for v in re.findall(r"(?<![\w.])\d+(?![\w.])", m.group(1))):
+                elif any(int(v) < floor for v in re.findall(r"(?<![\w.])\d+(?![\w.])", m.group(1))):
                     found.append(f"{rel}:{n}: {line.strip()}")
         self.assertEqual(found, [], "text under the 13 px floor; use Theme.textMin or drop the size")
 

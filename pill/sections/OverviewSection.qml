@@ -120,6 +120,7 @@ ColumnLayout {
                         Layout.fillHeight: true
                         vertical: true
                         accent: "sun"
+                        accessibleValue: root.brightness < 0 ? "Unavailable" : `${Math.round(root.brightness * 100)}%`
                         enabled: Brightness.hasDdc(root.screenName) && root.brightness >= 0
                         value: root.brightness
                         onMoved: v => Brightness.setLevel(root.screenName, v)

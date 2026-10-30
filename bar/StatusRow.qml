@@ -80,6 +80,7 @@ Row {
 
     Segment {
         accessibleName: "Keyboard layout"
+        accessibleDescription: StatusLib.kbShort(KbLayout.layout)
         visible: KbLayout.available
         text: StatusLib.kbShort(KbLayout.layout)
         onClicked: KbLayout.next()

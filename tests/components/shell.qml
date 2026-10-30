@@ -166,8 +166,8 @@ ShellRoot {
         role(unknownLevel, Accessible.ProgressBar, "a level that is only shown");
         expect(unknownLevel.Accessible.description === "Unavailable", "an unknown level reads as a percentage: '" + unknownLevel.Accessible.description + "'");
         shell.seeks = [];
-        seek.seekBy(5);
-        seek.seekBy(-5);
+        seek.Accessible.increaseAction();
+        seek.Accessible.decreaseAction();
         seek.seekBy(500);
         seek.seekBy(-500);
         shownSeek.seekBy(5);
