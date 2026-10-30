@@ -46,6 +46,7 @@ pill/sections/ClipboardSection.qml: Rectangle { > border.color: Theme.ink
 pill/sections/MusicSection.qml: Rectangle { > border.color: Theme.ink
 pill/sections/NotificationsSection.qml: Rectangle { > border.color: Theme.ink
 pill/sections/agents/ActivityCard.qml: Rectangle { > border.color: Theme.ink
+pill/sections/agents/ActivityCard.qml: delegate: Rectangle { > border.color: Theme.ink
 pill/sections/agents/LimitsCard.qml: Rectangle { > border.color: Theme.ink
 pill/sections/agents/LimitsCard.qml: Rectangle { > color: Theme.ink
 pill/sections/agents/NowCard.qml: delegate: Rectangle { > border.color: Theme.ink

@@ -19,11 +19,11 @@ CaptionBox {
     tabs: [
         {
             text: "Timer",
-            accent: "coral"
+            accent: "pink"
         },
         {
             text: "Stopwatch",
-            accent: "coral"
+            accent: "pink"
         }
     ]
     currentTab: stopwatch ? 1 : 0
@@ -45,7 +45,7 @@ CaptionBox {
                 height: width
                 thickness: 8
                 animated: !root.stopwatch
-                accent: root.done ? "lime" : "coral"
+                accent: root.done ? "lime" : "pink"
                 value: root.stopwatch ? (Timers.stopwatchElapsed % 60000) / 60000 : root.done ? 1 : Timers.timerFraction
 
                 Column {
@@ -153,7 +153,7 @@ CaptionBox {
                 Layout.preferredHeight: 46
                 icon: root.running ? "\u{f03e4}" : "\u{f040a}"
                 iconSize: 20
-                accent: "coral"
+                accent: "pink"
                 onClicked: {
                     if (root.stopwatch)
                         Timers.toggleStopwatch();

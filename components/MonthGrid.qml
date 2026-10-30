@@ -87,12 +87,13 @@ RowLayout {
                     id: head
 
                     required property int modelData
-                    readonly property string accent: modelData === 0 || modelData === 6 ? "coral" : "navy"
+                    // Weekends are a quieter, paper header: red is the urgent colour and says nothing about the date.
+                    readonly property bool weekend: modelData === 0 || modelData === 6
 
                     Layout.fillWidth: true
                     Layout.preferredHeight: root.headerHeight
                     Layout.preferredWidth: 1
-                    color: Theme.accent[accent]
+                    color: head.weekend ? Theme.paper : Theme.accent.navy
                     border.color: Theme.ink
                     border.width: Theme.inkWidth
 
@@ -101,7 +102,7 @@ RowLayout {
                         text: Qt.locale().dayName(head.modelData, Locale.ShortFormat).toUpperCase()
                         font.pixelSize: 11
                         font.bold: true
-                        color: Theme.on[head.accent]
+                        color: head.weekend ? Theme.text : Theme.on.navy
                     }
                 }
             }

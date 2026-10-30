@@ -16,7 +16,7 @@ CaptionBox {
     tabs: [
         {
             text: "Camera",
-            accent: "coral"
+            accent: "pink"
         }
     ]
     currentTab: 0
@@ -48,13 +48,13 @@ CaptionBox {
 
             InkBox {
                 anchors.horizontalCenter: parent.horizontalCenter
-                fill: Theme.accent[root.problem !== "" ? "navy" : "coral"]
+                fill: Theme.accent[root.problem !== "" ? "navy" : "pink"]
 
                 InkIcon {
                     anchors.centerIn: parent
                     icon: root.problem !== "" ? "\u{f05df}" : "\u{f0100}"
                     size: 32
-                    color: Theme.on[root.problem !== "" ? "navy" : "coral"]
+                    color: Theme.on[root.problem !== "" ? "navy" : "pink"]
                 }
 
                 // The glyph is centred, which the box counts as 0, so the size is stated.
@@ -92,7 +92,8 @@ CaptionBox {
             visible: root.problem === "" || root.on
             icon: root.on ? "\u{f0568}" : "\u{f0567}"
             iconSize: 18
-            accent: root.on ? "" : "coral"
+            checked: root.on
+            accent: root.on ? "" : "pink"
             onClicked: root.on = !root.on
         }
     }

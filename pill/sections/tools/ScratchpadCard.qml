@@ -13,7 +13,7 @@ CaptionBox {
     tabs: [
         {
             text: "Scratchpad",
-            accent: "coral"
+            accent: "pink"
         }
     ]
     currentTab: 0
@@ -69,7 +69,7 @@ CaptionBox {
                 Layout.alignment: Qt.AlignTop
                 visible: !Scratchpad.full
                 icon: "\u{f0415}"
-                accent: "coral"
+                accent: "pink"
                 onClicked: Scratchpad.add()
             }
         }

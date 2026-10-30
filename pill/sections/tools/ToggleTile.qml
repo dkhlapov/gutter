@@ -3,9 +3,10 @@ import QtQuick.Layouts
 import qs.theme
 import qs.components
 
-// Quick toggle. Off, it is a plain button; on, it drops onto its shadow (InkButton's checked look) and fills
-// with the coral accent. Short tiles (a row under the camera) show icon and label; tall ones (a column when
-// there is no camera) make the icon bigger and add the state below the label.
+// Quick toggle. Off, it is a plain button; on, it drops onto its shadow and fills with the active role's colour
+// (InkButton's checked look), the same "on" as every other toggle in the panel. Short tiles (a row under the
+// camera) show icon and label; tall ones (a column when there is no camera) make the icon bigger and add the state
+// below the label.
 Item {
     id: root
 
@@ -18,7 +19,7 @@ Item {
     readonly property bool tall: height > 96
     // An unavailable tile is paper whatever its state, as InkButton draws it.
     readonly property bool lit: on && available
-    readonly property color ink: lit ? Theme.on.coral : Theme.text
+    readonly property color ink: lit ? Theme.on[Theme.roleAccent.active] : Theme.text
 
     signal clicked
 
@@ -31,7 +32,6 @@ Item {
         id: button
 
         anchors.fill: parent
-        accent: root.lit ? "coral" : ""
         checked: root.lit
         enabled: root.available
         onClicked: root.clicked()

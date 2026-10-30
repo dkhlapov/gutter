@@ -28,7 +28,7 @@ RowLayout {
         tabs: [
             {
                 text: "On the shelf",
-                accent: "coral"
+                accent: "navy"
             }
         ]
         currentTab: 0

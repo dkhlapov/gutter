@@ -15,7 +15,7 @@ CaptionBox {
     tabs: [
         {
             text: "File shelf",
-            accent: "coral"
+            accent: "navy"
         }
     ]
     currentTab: 0
@@ -34,7 +34,7 @@ CaptionBox {
                 id: badge
 
                 anchors.centerIn: parent
-                fill: Theme.accent.coral
+                fill: Theme.accent.navy
                 // Its content is centred, which the box counts as 0, so the size is stated.
                 implicitWidth: 124
                 implicitHeight: 124
@@ -45,7 +45,7 @@ CaptionBox {
                     visible: root.empty || root.hot
                     icon: root.hot ? "\u{f01da}" : "\u{f0a4d}"
                     size: 52
-                    color: Theme.on.coral
+                    color: Theme.on.navy
                 }
 
                 InkText {
@@ -54,7 +54,7 @@ CaptionBox {
                     text: Shelf.items.length
                     font.pixelSize: 52
                     font.bold: true
-                    color: Theme.on.coral
+                    color: Theme.on.navy
                 }
             }
         }
