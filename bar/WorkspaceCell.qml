@@ -26,6 +26,17 @@ Item {
     readonly property real tabWidth: Theme.pillHeight - 2 * Theme.inkWidth
     readonly property bool hovered: area.containsMouse
 
+    // The app icons' model, brought in line with the summary so a window opening or closing updates the icons in
+    // place instead of rebuilding them.
+    ListModel {
+        id: appModel
+
+        dynamicRoles: true
+    }
+
+    onSummaryChanged: WS.syncList(appModel, summary.apps, "appId")
+    Component.onCompleted: WS.syncList(appModel, summary.apps, "appId")
+
     signal clicked
     signal wheeled(var wheel)
 
@@ -91,13 +102,13 @@ Item {
             spacing: 6
 
             Repeater {
-                model: root.summary.apps
+                model: appModel
 
                 Item {
                     id: app
 
-                    required property string modelData
-                    readonly property string icon: Workspaces.appIcon(modelData)
+                    required property string appId
+                    readonly property string icon: Workspaces.appIcon(appId)
 
                     implicitWidth: Theme.appIconSize
                     implicitHeight: Theme.appIconSize
@@ -113,7 +124,7 @@ Item {
                     InkText {
                         anchors.centerIn: parent
                         visible: app.icon === ""
-                        text: app.modelData.replace(/^.*\./, "").charAt(0).toUpperCase()
+                        text: app.appId.replace(/^.*\./, "").charAt(0).toUpperCase()
                         color: root.boxAccent !== "" ? Theme.on[root.boxAccent] : Theme.text
                         font.bold: true
                         font.pixelSize: Theme.textSize

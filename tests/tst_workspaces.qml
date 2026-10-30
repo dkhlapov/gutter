@@ -163,4 +163,44 @@ TestCase {
         compare(WS.toggleSpecialCommand("music"), 'hl.dsp.workspace.toggle_special("music")');
         compare(WS.toggleSpecialCommand('a"b'), 'hl.dsp.workspace.toggle_special("a\\"b")');
     }
+
+    // A stand-in for a ListModel: the rows, and the calls the sync makes.
+    function fakeModel() {
+        return {
+            rows: [], calls: [],
+            get count() { return this.rows.length; },
+            get: function (i) { return this.rows[i]; },
+            set: function (i, row) { this.calls.push("set" + i); this.rows[i] = row; },
+            append: function (row) { this.calls.push("append"); this.rows.push(row); },
+            remove: function (i, n) { this.calls.push("remove" + i + "," + n); this.rows.splice(i, n); }
+        };
+    }
+    function test_sync_list_fills_and_leaves_equal_rows() {
+        const m = fakeModel();
+        WS.syncList(m, ["a", "b"], "id");
+        compare(m.rows.map(r => r.id), ["a", "b"]);
+        m.calls = [];
+        WS.syncList(m, ["a", "b"], "id");
+        compare(m.calls, []);
+    }
+    function test_sync_list_sets_changed_rows_only() {
+        const m = fakeModel();
+        WS.syncList(m, [{ n: 1 }, { n: 2 }], "cell");
+        m.calls = [];
+        WS.syncList(m, [{ n: 1 }, { n: 3 }], "cell");
+        compare(m.calls, ["set1"]);
+        compare(m.rows[1].cell.n, 3);
+    }
+    function test_sync_list_grows_and_shrinks_at_the_end() {
+        const m = fakeModel();
+        WS.syncList(m, ["a", "b", "c"], "id");
+        m.calls = [];
+        WS.syncList(m, ["a", "b"], "id");
+        compare(m.calls, ["remove2,1"]);
+        m.calls = [];
+        WS.syncList(m, ["a", "b", "z"], "id");
+        compare(m.calls, ["append"]);
+        WS.syncList(m, [], "id");
+        compare(m.rows.length, 0);
+    }
 }
