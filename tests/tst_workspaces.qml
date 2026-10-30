@@ -4,6 +4,15 @@ import "../lib/workspaces.js" as WS
 
 TestCase {
     name: "Workspaces"
+
+    Component {
+        id: realModel
+
+        ListModel {
+            dynamicRoles: true
+        }
+    }
+
     readonly property var accents: ["navy", "teal", "magenta", "coral", "sun", "lime", "pink"]
 
     function test_group_first() {
@@ -209,5 +218,24 @@ TestCase {
         m.calls = [];
         WS.syncList(m, [{ b: { x: [3, { p: 2, q: 1 }], y: 2 }, a: 1 }], "cell");
         compare(m.calls, []);
+    }
+
+    // Against a real ListModel, what a Repeater's delegates see: no change signal for a list that has not changed, one
+    // for a changed row. (A ListModel does not signal a set of equal values, so this does not tell whether syncList
+    // skipped the set; the fake model above does.)
+    function test_sync_list_real_model_sets_changed_rows_only() {
+        const model = createTemporaryObject(realModel, this);
+        let changed = 0;
+        model.dataChanged.connect(() => changed++);
+        const cell = (id, state) => ({ id, label: String(id), state, accent: "sun", apps: ["foot"] });
+        WS.syncList(model, [cell(1, "empty"), cell(2, "active")], "cell");
+        const filled = changed;
+        WS.syncList(model, [cell(1, "empty"), cell(2, "active")], "cell");
+        compare(changed, filled);
+        WS.syncList(model, [cell(1, "empty"), cell(2, "urgent")], "cell");
+        compare(changed, filled + 1);
+        compare(model.get(1).cell.state, "urgent");
+        WS.syncList(model, [cell(1, "empty")], "cell");
+        compare(model.count, 1);
     }
 }

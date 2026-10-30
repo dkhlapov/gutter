@@ -5,7 +5,6 @@ import Quickshell
 import qs.bar
 import qs.components
 import qs.theme
-import "lib/workspaces.js" as WorkspaceLib
 
 // The shared components check (scripts/components.sh). InkBox and SpeechBubble size from their visible content
 // (a hidden box still measures its content), and InkSlider keeps its grab and wheel state private, steps on a
@@ -138,20 +137,6 @@ ShellRoot {
         expect(fewer.length === 2 && fewer[0] === before[0] && fewer[1] === before[1], "a closed workspace rebuilds the other boxes: " + fewer.length);
     }
 
-    // The same against a real ListModel, which hands objects back with their keys in another order: a list that
-    // has not changed sets no row.
-    function syncReal() {
-        let changed = 0;
-        realModel.dataChanged.connect(() => changed++);
-        const cell = (id, state) => ({ id, label: String(id), state, accent: "sun", apps: ["foot"] });
-        WorkspaceLib.syncList(realModel, [cell(1, "empty"), cell(2, "active")], "cell");
-        const filled = changed;
-        WorkspaceLib.syncList(realModel, [cell(1, "empty"), cell(2, "active")], "cell");
-        expect(changed === filled, "an unchanged list sets rows of a real ListModel: " + (changed - filled));
-        WorkspaceLib.syncList(realModel, [cell(1, "empty"), cell(2, "urgent")], "cell");
-        expect(changed === filled + 1 && realModel.get(1).cell.state === "urgent", "a changed row is not set alone: " + (changed - filled));
-    }
-
     // A wheel turn of `delta` (120 is a notch); the steps it made.
     function wheelSteps(delta) {
         shell.steps = 0;
@@ -259,12 +244,6 @@ ShellRoot {
             onStepped: n => shell.steps += n
         }
 
-        ListModel {
-            id: realModel
-
-            dynamicRoles: true
-        }
-
         WorkspaceBar {
             id: wsBar
 
@@ -355,7 +334,6 @@ ShellRoot {
                 shell.slider();
                 shell.wheelRemainder();
                 shell.workspaceBar();
-                shell.syncReal();
                 menuSteps.start();
             }
         }
