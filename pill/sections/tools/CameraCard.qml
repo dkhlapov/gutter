@@ -92,6 +92,7 @@ CaptionBox {
             visible: root.problem === "" || root.on
             icon: root.on ? "\u{f0568}" : "\u{f0567}"
             iconSize: 18
+            checked: root.on
             accent: root.on ? "" : "pink"
             onClicked: root.on = !root.on
         }
