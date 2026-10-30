@@ -467,6 +467,40 @@ TestCase {
         compare(N.adoptTarget([rec({ id: 1, serverId: 7, run: "", live: false })], 7, "b"), undefined);
     }
 
+    // A held-over transient is let go only when its bubble had been up; one still waiting, or that arrived in the
+    // reload's gap, is new. A non-transient one is never let go here (it has a record or is new).
+    function test_adoptLetGo() {
+        verify(N.adoptLetGo(true, [3, 7], 7));
+        verify(!N.adoptLetGo(true, [3, 7], 8));
+        verify(!N.adoptLetGo(true, [], 7));
+        verify(!N.adoptLetGo(false, [7], 7));
+    }
+
+    function test_shownAddKeepsEachOnceNewestLastAndCapped() {
+        compare(N.shownAdd([], 5), [5]);
+        compare(N.shownAdd([5], 5), [5]);
+        compare(N.shownAdd([5, 6], 7, 2), [6, 7]);
+    }
+
+    function test_shownRoundTripsAndIsPerRun() {
+        const s = N.parseState(N.serialize({ dnd: false, next: 2, items: [], run: "a", shown: [4, 9] }));
+        compare(s.shown, { run: "a", ids: [4, 9] });
+        compare(N.shownFor(s.shown, "a"), [4, 9]);
+        // Another launch numbers on its own.
+        compare(N.shownFor(s.shown, "b"), []);
+        compare(N.shownFor(undefined, "a"), []);
+    }
+
+    function test_parseStateCleansShown() {
+        const bad = N.parseState(JSON.stringify({ version: 1, next: 1, items: [], shown: { run: 5, ids: [1, "x", -2, 1.5, null, 3] } }));
+        compare(bad.shown, { run: "", ids: [1, 3] });
+        compare(N.parseState(JSON.stringify({ version: 1, next: 1, items: [] })).shown, { run: "", ids: [] });
+        compare(N.parseState(JSON.stringify({ version: 1, next: 1, items: [], shown: "no" })).shown, { run: "", ids: [] });
+        const many = N.parseState(JSON.stringify({ version: 1, next: 1, items: [], shown: { run: "a", ids: Array.from({ length: 500 }, (_, i) => i) } }));
+        compare(many.shown.ids.length, N.SHOWN_MAX);
+        compare(many.shown.ids[N.SHOWN_MAX - 1], 499);
+    }
+
     function test_adoptEntryKeepsCountReadAndRun() {
         const old = rec({ id: 4, serverId: 7, summary: "Old", at: 5000, count: 3, read: true, run: "a", live: false });
         const entry = N.adoptEntry(old, N.fromNotification(note({ id: 7, summary: "New" }), old.id, old.at));
@@ -548,11 +582,16 @@ TestCase {
         compare(N.ownerState("owner=1579\ncmd=dunst\n"), "unknown");
     }
 
+    // No busctl is a definite answer: the check is not repeated.
+    function test_ownerStateUnsupported() {
+        compare(N.ownerState("nobusctl=1\n"), "unsupported");
+    }
+
     function test_ownerCommand() {
         const c = N.ownerCommand();
         compare(c.slice(0, 2), ["sh", "-c"]);
-        // Without busctl the output is empty, which otherOwner() takes as no other holder.
-        verify(c[2].startsWith("command -v busctl >/dev/null || exit 0; echo self=$PPID"));
+        // Without busctl it says so, which ownerState() takes as unsupported.
+        verify(c[2].startsWith("command -v busctl >/dev/null || { echo nobusctl=1; exit 0; }; echo self=$PPID"));
         verify(c[2].indexOf("busctl --user status org.freedesktop.Notifications") !== -1);
         verify(c[2].indexOf("/proc/") !== -1);
     }
