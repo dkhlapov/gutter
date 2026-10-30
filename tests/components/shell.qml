@@ -2,6 +2,7 @@
 import QtQuick
 import QtTest
 import Quickshell
+import qs.bar
 import qs.components
 import qs.theme
 
@@ -85,6 +86,55 @@ ShellRoot {
         expect(shell.moves.length === 2 && Math.abs(shell.moves[0] - slide.value) < 1e-9
             && Math.abs(shell.moves[1] - dragged) < 1e-9,
             "a drag from off the handle's centre loses its grip: " + JSON.stringify(shell.moves));
+    }
+
+    // The workspace bar's cells and their app icons are updated in place when the workspaces change: the same items
+    // stay, only their content moves (a rebuild would flash the bar and drop a hover).
+    function cellItems() {
+        const out = [];
+        const walk = item => {
+            if (item.tabWidth !== undefined && item.cell !== undefined)
+                out.push(item);
+            for (const child of item.children)
+                walk(child);
+        };
+        walk(wsBar);
+        return out;
+    }
+
+    function appIcons(cellItem) {
+        const out = [];
+        const walk = item => {
+            if (item.appId !== undefined)
+                out.push(item);
+            for (const child of item.children)
+                walk(child);
+        };
+        walk(cellItem);
+        return out;
+    }
+
+    function workspaceBar() {
+        const cell = (id, apps, state) => ({ id, label: String(id), state, accent: "sun", apps });
+        wsBar.cells = [cell(1, ["foot"], "occupied"), cell(2, [], "empty"), cell(-98, ["a", "b"], "active")];
+        const before = cellItems();
+        const foot = appIcons(before[0]);
+        expect(foot.length === 1 && foot[0].appId === "foot", "a box draws an icon per app: " + foot.length);
+        expect(before.length === 3, "the bar draws a box per cell: " + before.length);
+
+        // The same workspaces with a window more on the first and a new state on the second.
+        wsBar.cells = [cell(1, ["foot", "firefox"], "occupied"), cell(2, [], "urgent"), cell(-98, ["a", "b"], "active")];
+        const after = cellItems();
+        expect(after.length === 3 && after.every((c, i) => c === before[i]), "a change rebuilds the bar's boxes");
+        const icons = appIcons(after[0]);
+        expect(icons.length === 2 && icons[0] === foot[0] && icons[1].appId === "firefox", "a window opened rebuilds the box's icons");
+        expect(after[1].cell.state === "urgent", "a box does not follow its cell: " + after[1].cell.state);
+        expect(after[0].summary.apps.length === 2, "a box does not show a window opened: " + after[0].summary.apps.length);
+
+        // A special workspace closing drops its box and the others stay.
+        wsBar.cells = [cell(1, ["foot", "firefox"], "occupied"), cell(2, [], "urgent")];
+        const fewer = cellItems();
+        expect(fewer.length === 2 && fewer[0] === before[0] && fewer[1] === before[1], "a closed workspace rebuilds the other boxes: " + fewer.length);
     }
 
     // A wheel turn of `delta` (120 is a notch); the steps it made.
@@ -194,6 +244,14 @@ ShellRoot {
             onStepped: n => shell.steps += n
         }
 
+        WorkspaceBar {
+            id: wsBar
+
+            x: 150
+            y: 100
+            visible: false
+        }
+
         TestCase {
             id: pointer
 
@@ -275,6 +333,7 @@ ShellRoot {
                 shell.sizing();
                 shell.slider();
                 shell.wheelRemainder();
+                shell.workspaceBar();
                 menuSteps.start();
             }
         }
