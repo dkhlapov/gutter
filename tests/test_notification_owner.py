@@ -1,4 +1,4 @@
-import json, os, re, subprocess, tempfile, unittest
+import json, os, re, shutil, subprocess, tempfile, unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -64,6 +64,18 @@ class OwnerCommand(unittest.TestCase):
             out = self.run_check("fail", "ok", listed=listed)
             self.assertNotIn("owner=", out)
             self.assertNotIn("failed=1", out)
+
+    # A connection holds the name but the list shows no pid for it: that is a holder we cannot name, not nobody.
+    def test_listed_holder_without_a_pid_is_unknown(self):
+        out = self.run_check("fail", "ok", listed="org.freedesktop.Notifications - - - :1.5 - -")
+        self.assertIn("failed=1\n", out)
+        self.assertNotIn("owner=", out)
+
+    # Without busctl the check says so, instead of printing nothing, so it is not asked again every few seconds.
+    def test_no_busctl(self):
+        with tempfile.TemporaryDirectory() as empty:
+            out = subprocess.run([shutil.which("sh"), "-c", owner_command()], env={"PATH": empty}, capture_output=True, text=True, check=True).stdout
+        self.assertEqual(out, "nobusctl=1\n")
 
     # busctl is there but the bus cannot be asked: the check could not tell.
     def test_failing_busctl_is_unknown(self):

@@ -36,6 +36,9 @@ Singleton {
     readonly property var current: recordFor(currentId)
     readonly property int unread: NotifLib.unreadCount(history)
     property bool dnd: false
+    // Server ids of this launch's transient notifications whose bubble has been up; saved, so a reload lets those go
+    // and shows the rest (see adopt).
+    property var shown: []
     // False when the start-up check found another daemon holding the notification name (the panel says so).
     property bool owned: true
     // How many bubbles (one per monitor) the pointer is on: the timer waits while there is one. Counted, not a
@@ -128,6 +131,10 @@ Singleton {
         queue = q;
         if (rec.transient && q.indexOf(entry.id) === -1)
             forgetBubbleOnly(entry.id);
+        // The update has not appeared yet: a reload must not let it go as the earlier bubble (markShown records it again
+        // once it is up).
+        if (rec.transient && known)
+            shown = shown.filter(id => id !== rec.serverId);
         if (known && entry.id === currentId)
             showCurrent();
     }
@@ -136,13 +143,14 @@ Singleton {
     // without a bubble, a new count or an unread mark. A non-transient one with no record of this launch came in
     // just before the reload, before the history was saved (or the save is failing): it is new and shows like one,
     // with the time it was received now, because the original time is unknown to QML. A transient one with no kept
-    // record has had its bubble, and is let go.
+    // record is let go if its bubble had been up (`shown`); otherwise it was waiting in the queue or arrived while
+    // the shell reloaded, and shows like a new one.
     function adopt(n: var): void {
         const old = NotifLib.adoptTarget(history, n.id, runId(), n.transient === true);
         if (!old) {
-            // A transient one has had its bubble (or lost it to the reload) and is not kept; one with nothing to show
+            // A transient one that had its bubble (or lost it to the reload) is not kept; one with nothing to show
             // has no record; `receive` has tracked it, so nothing else would let go of it.
-            if (n.transient || !NotifLib.fromNotification(n, 0, 0)) {
+            if (NotifLib.adoptLetGo(n.transient === true, shown, n.id) || !NotifLib.fromNotification(n, 0, 0)) {
                 try {
                     n.expire();
                 } catch (e) {
@@ -365,11 +373,26 @@ Singleton {
             return;
         }
         Activities.show("notification", NotifLib.priority(record), 0, "notifications");
+        markShown();
         bubbleTimer.interval = NotifLib.duration(record);
         bubbleTimer.stop();
         if (!bubbleHovered)
             bubbleTimer.start();
     }
+
+    // The bubble of a transient notification is up, so a reload lets that one go (see adopt). Only while the pill shows
+    // it: a higher-priority HUD can hold the pill, and the bubble waits behind it unseen.
+    function markShown(): void {
+        if (!bubbleOnPill)
+            return;
+        const record = recordFor(currentId);
+        if (record?.transient)
+            shown = NotifLib.shownAdd(shown, record.serverId);
+    }
+
+    readonly property bool bubbleOnPill: Activities.current?.id === "notification"
+
+    onBubbleOnPillChanged: markShown()
 
     readonly property bool screenLocked: !NotifLib.bubblesAllowed(Lock.locked, Lock.preview)
 
@@ -434,15 +457,21 @@ Singleton {
     }
 
     onHistoryChanged: scheduleSave()
+    onShownChanged: scheduleSave()
 
     function scheduleSave(): void {
-        if (loaded && !inert)
-            save.restart();
+        if (!loaded || inert)
+            return;
+        save.restart();
+        if (!saveCap.running)
+            saveCap.start();
     }
 
     function write(): void {
+        save.stop();
+        saveCap.stop();
         if (dirReady)
-            file.setText(NotifLib.serialize({ dnd, next, items: history }));
+            file.setText(NotifLib.serialize({ dnd, next, items: history, run: runId(), shown }));
         else
             mkdir.running = true;
     }
@@ -478,12 +507,15 @@ Singleton {
     property bool ownerWarned: false
     // The last owner check could not tell who holds the name; `owned` is as the check before it left it.
     property bool ownerUnknown: false
+    // There is no busctl to ask, so the check is not repeated.
+    property bool ownerUnsupported: false
 
     // The server asks for the name when it starts; a moment later one check says whether another daemon has it.
     onWantedChanged: {
         ownerTimer.stop();
         owned = true;
         ownerUnknown = false;
+        ownerUnsupported = false;
         if (wanted)
             ownerTimer.start();
         else
@@ -508,8 +540,15 @@ Singleton {
         // The setting went off while the check ran.
         if (!serverOn)
             return;
-        ownerUnknown = NotifLib.ownerState(output) === "unknown";
-        if (ownerUnknown)
+        const state = NotifLib.ownerState(output);
+        ownerUnknown = state === "unknown";
+        // No busctl: nobody can say, and asking again would not change that; `owned` stays as it is.
+        ownerUnsupported = state === "unsupported";
+        if (ownerUnsupported && !ownerWarned) {
+            ownerWarned = true;
+            console.warn("gutter: notifications: no busctl, so another daemon holding the name cannot be detected");
+        }
+        if (ownerUnknown || ownerUnsupported)
             return;
         const other = NotifLib.otherOwner(output);
         owned = other === null;
@@ -549,7 +588,7 @@ Singleton {
     Timer {
         interval: 5000
         repeat: true
-        running: root.serverOn && (!root.owned || root.ownerUnknown) && !root.inert
+        running: root.serverOn && (!root.owned || root.ownerUnknown) && !root.ownerUnsupported && !root.inert
         onTriggered: root.checkOwner()
     }
 
@@ -594,6 +633,7 @@ Singleton {
                 root.history = parsed.items;
                 root.dnd = parsed.dnd;
                 root.next = parsed.next;
+                root.shown = NotifLib.shownFor(parsed.shown, root.runId());
             } else {
                 console.warn("gutter: notifications.json is not usable, starting empty");
             }
@@ -628,6 +668,14 @@ Singleton {
         id: save
 
         interval: 200
+        onTriggered: root.write()
+    }
+
+    // The save timer restarts on every change, so a stream of them could hold the save back: this caps the wait.
+    Timer {
+        id: saveCap
+
+        interval: 2000
         onTriggered: root.write()
     }
 }
