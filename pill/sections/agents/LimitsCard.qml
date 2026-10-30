@@ -115,7 +115,7 @@ CaptionBox {
 
                     InkText {
                         text: row.w === null || row.w.pct === null ? "—" : `${Math.round(row.w.pct)}%`
-                        font.pixelSize: 13
+                        font.pixelSize: Theme.textMin
                         font.bold: true
                     }
                 }

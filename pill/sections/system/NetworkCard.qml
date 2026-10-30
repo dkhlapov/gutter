@@ -42,7 +42,7 @@ CaptionBox {
 
             InkText {
                 text: `${Format.bytes(NetworkUsage.downloadSpeed)}/s`
-                font.pixelSize: 13
+                font.pixelSize: Theme.textMin
             }
 
             Item {
@@ -64,7 +64,7 @@ CaptionBox {
 
             InkText {
                 text: `${Format.bytes(NetworkUsage.uploadSpeed)}/s`
-                font.pixelSize: 13
+                font.pixelSize: Theme.textMin
             }
         }
 

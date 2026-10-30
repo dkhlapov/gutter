@@ -25,7 +25,7 @@ RowLayout {
         InkText {
             Layout.fillWidth: true
             text: Qt.locale().dayName(root.noon.getDay(), Locale.ShortFormat)
-            font.pixelSize: 13
+            font.pixelSize: Theme.textMin
             font.bold: true
         }
 
@@ -91,7 +91,7 @@ RowLayout {
         Layout.preferredWidth: 32
         horizontalAlignment: Text.AlignRight
         text: `${Math.round(root.day.max)}°`
-        font.pixelSize: 13
+        font.pixelSize: Theme.textMin
         font.bold: true
     }
 }

@@ -48,7 +48,7 @@ InkBox {
                 textFormat: Text.PlainText
                 elide: Text.ElideRight
                 font.bold: true
-                font.pixelSize: Math.round(13 * root.ui)
+                font.pixelSize: Math.round(Theme.textMin * root.ui)
             }
 
             InkText {

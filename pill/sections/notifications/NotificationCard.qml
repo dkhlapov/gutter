@@ -317,7 +317,7 @@ Item {
                                 selectionColor: Theme.accent.sun
                                 selectedTextColor: Theme.on.sun
                                 font.family: Theme.font
-                                font.pixelSize: 13
+                                font.pixelSize: Theme.textMin
                                 // The text goes to the app as it is; nothing here builds a command from it.
                                 Keys.onReturnPressed: root.send()
                                 Keys.onEnterPressed: root.send()

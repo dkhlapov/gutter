@@ -29,7 +29,7 @@ Row {
         visible: KbLayout.available
         height: Math.round(24 * root.ui)
         text: StatusLib.kbShort(KbLayout.layout)
-        textSize: Math.round(13 * root.ui)
+        textSize: Math.round(Theme.textMin * root.ui)
         onClicked: KbLayout.next()
     }
 
@@ -46,7 +46,7 @@ Row {
                 anchors.centerIn: parent
                 text: root.battery.text
                 font.bold: true
-                font.pixelSize: Math.round(13 * root.ui)
+                font.pixelSize: Math.round(Theme.textMin * root.ui)
             }
         }
     }

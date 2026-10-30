@@ -94,7 +94,7 @@ Item {
                     InkText {
                         Layout.fillWidth: true
                         text: [Media.artist, Media.album].filter(s => s).join(" · ")
-                        font.pixelSize: 13
+                        font.pixelSize: Theme.textMin
                         elide: Text.ElideRight
                         color: Theme.textMuted
                     }

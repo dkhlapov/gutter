@@ -70,7 +70,7 @@ Item {
                     InkText {
                         Layout.fillWidth: true
                         text: Weather.place
-                        font.pixelSize: 13
+                        font.pixelSize: Theme.textMin
                         font.bold: true
                         elide: Text.ElideRight
                         color: root.ink
@@ -113,7 +113,7 @@ Item {
                         InkText {
                             Layout.fillWidth: true
                             text: WeatherLib.condition(root.weather?.current.code ?? -1)
-                            font.pixelSize: 13
+                            font.pixelSize: Theme.textMin
                             elide: Text.ElideRight
                             color: root.ink
                         }
@@ -126,14 +126,14 @@ Item {
                     InkText {
                         Layout.fillWidth: true
                         text: `Feels like ${Math.round(root.weather?.current.feels ?? 0)}°`
-                        font.pixelSize: 13
+                        font.pixelSize: Theme.textMin
                         elide: Text.ElideRight
                         color: root.ink
                     }
 
                     InkText {
                         text: `H ${Math.round(root.weather?.today.max ?? 0)}° · L ${Math.round(root.weather?.today.min ?? 0)}°`
-                        font.pixelSize: 13
+                        font.pixelSize: Theme.textMin
                         color: root.ink
                     }
                 }

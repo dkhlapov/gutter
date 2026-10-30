@@ -50,7 +50,7 @@ RowLayout {
                 InkText {
                     Layout.alignment: Qt.AlignHCenter
                     text: col.now ? "Now" : root.longLabels ? `${col.modelData.hour}:00` : col.modelData.hour
-                    font.pixelSize: 13
+                    font.pixelSize: Theme.textMin
                     font.bold: col.now
                     color: col.ink
                     opacity: col.now ? 1 : 0.7

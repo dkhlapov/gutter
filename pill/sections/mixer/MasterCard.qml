@@ -60,7 +60,7 @@ CaptionBox {
             InkText {
                 Layout.fillWidth: true
                 text: Audio.sink?.description || Audio.sink?.nickname || "No output"
-                font.pixelSize: 13
+                font.pixelSize: Theme.textMin
                 font.bold: true
                 wrapMode: Text.Wrap
                 maximumLineCount: 3

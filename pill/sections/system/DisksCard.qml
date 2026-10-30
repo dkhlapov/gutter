@@ -56,7 +56,7 @@ CaptionBox {
                 InkText {
                     Layout.fillWidth: true
                     text: disk.modelData.mount
-                    font.pixelSize: 13
+                    font.pixelSize: Theme.textMin
                     font.bold: true
                     elide: Text.ElideRight
                 }

@@ -84,7 +84,7 @@ Item {
                             selectionColor: Theme.accent.sun
                             selectedTextColor: Theme.on.sun
                             font.family: Theme.font
-                            font.pixelSize: 13
+                            font.pixelSize: Theme.textMin
                             onTextChanged: root.query = text
                         }
 

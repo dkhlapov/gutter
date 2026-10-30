@@ -89,7 +89,7 @@ CaptionBox {
                     clip: true
                     focus: true
                     font.family: Theme.font
-                    font.pixelSize: 13
+                    font.pixelSize: Theme.textMin
                     color: Theme.text
                     selectionColor: Theme.accent[Theme.roleAccent.active]
                     selectedTextColor: Theme.on[Theme.roleAccent.active]
