@@ -6,7 +6,7 @@ import "../../../lib/shelf.js" as ShelfLib
 import "../../../lib/glyphs.js" as Glyphs
 
 // One held file: thumbnail or kind icon, name, size. Click opens it, dragging carries it out as a file
-// URL, the corner button takes it off the shelf. A file that is gone has dimmed text and cannot be dragged.
+// URL, the corner button takes it off the shelf. A file that is gone has a dimmed name and cannot be dragged.
 InkBox {
     id: root
 
@@ -112,10 +112,11 @@ InkBox {
         y: parent.height - 38
         width: parent.width - 20
         spacing: 1
-        opacity: root.gone ? 0.6 : 1
 
         InkText {
             width: parent.width
+            // A missing file's name is faded; its subtitle ("File is gone") stays whole for contrast.
+            opacity: root.gone ? 0.6 : 1
             text: ShelfLib.baseName(root.path)
             font.bold: true
             elide: Text.ElideMiddle

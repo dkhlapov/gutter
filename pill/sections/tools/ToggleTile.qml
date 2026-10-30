@@ -32,6 +32,7 @@ Item {
         id: button
 
         anchors.fill: parent
+        accessibleName: root.label
         checked: root.lit
         checkable: true
         enabled: root.available

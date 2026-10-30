@@ -32,6 +32,8 @@ Item {
     property var tip: null
     // What a screen reader calls the cell: this, else the tooltip's title, else its text. An icon-only cell sets it.
     property string accessibleName: ""
+    // Read after the name; the tip's body unless the cell says its state itself.
+    property string accessibleDescription: tip?.body ?? ""
     property var tipHost: null
     default property alias content: holder.data
 
@@ -47,7 +49,7 @@ Item {
 
     Accessible.role: Accessible.Button
     Accessible.name: accessibleName || tip?.title || text
-    Accessible.description: tip?.body ?? ""
+    Accessible.description: accessibleDescription
     Accessible.onPressAction: root.clicked({ button: Qt.LeftButton })
 
     onHoveredChanged: tipHost?.hoverTip(root, hovered)

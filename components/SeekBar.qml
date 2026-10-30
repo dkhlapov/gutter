@@ -25,7 +25,15 @@ Item {
     property real landed: -1
     readonly property real fraction: dragging ? fractionAt(area.mouseX) : landed >= 0 ? landed : value
 
+    // What a screen reader's increase and decrease move the position by, in seconds.
+    readonly property real accessibleStep: 5
+
     signal seek(real seconds)
+
+    function seekBy(seconds: real): void {
+        if (interactive && length > 0)
+            seek(Math.max(0, Math.min(length, fraction * length + seconds)));
+    }
 
     function fractionAt(x: real): real {
         return Math.max(0, Math.min(1, (x - thumbSize / 2) / travel));
@@ -41,6 +49,9 @@ Item {
     Accessible.role: interactive ? Accessible.Slider : Accessible.ProgressBar
     Accessible.name: accessibleName
     Accessible.description: `${Math.round(fraction * 100)}%`
+    Accessible.focusable: interactive
+    Accessible.onIncreaseAction: root.seekBy(accessibleStep)
+    Accessible.onDecreaseAction: root.seekBy(-accessibleStep)
 
     Rectangle {
         id: track

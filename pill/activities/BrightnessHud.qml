@@ -23,6 +23,7 @@ RowLayout {
 
     InkSlider {
         accessibleName: "Brightness"
+        accessibleValue: Brightness.focusedLevel < 0 ? "Unavailable" : `${Math.round(Brightness.focusedLevel * 100)}%`
         Layout.preferredWidth: 190
         interactive: false
         accent: root.accent

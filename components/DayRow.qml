@@ -58,7 +58,7 @@ RowLayout {
             anchors.verticalCenter: parent.verticalCenter
             text: `${root.day.pop}%`
             font.bold: root.day.pop >= 30
-            opacity: root.day.pop >= 30 ? 1 : 0.5
+            color: root.day.pop >= 30 ? Theme.text : Theme.textMuted
         }
     }
 
