@@ -165,7 +165,7 @@ CaptionBox {
                 visible: editor.text === ""
                 text: "Write something…"
                 font.pixelSize: 14
-                opacity: 0.5
+                color: Theme.textMuted
             }
         }
     }

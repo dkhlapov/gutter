@@ -52,7 +52,6 @@ CaptionBox {
                 InkText {
                     Layout.preferredWidth: 110
                     text: line.modelData.name
-                    font.pixelSize: 12
                     font.bold: true
                     elide: Text.ElideRight
                 }
@@ -68,9 +67,8 @@ CaptionBox {
                     Layout.preferredWidth: 54
                     horizontalAlignment: Text.AlignRight
                     text: U.money(line.modelData.cost)
-                    font.pixelSize: 12
                     elide: Text.ElideRight
-                    opacity: 0.7
+                    color: Theme.textMuted
                 }
             }
         }
@@ -79,8 +77,7 @@ CaptionBox {
             Layout.fillWidth: true
             visible: root.rows.length === 0
             text: "Nothing in this period"
-            font.pixelSize: 12
-            opacity: 0.7
+            color: Theme.textMuted
         }
 
         Item {

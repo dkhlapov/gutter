@@ -91,8 +91,7 @@ CaptionBox {
                 InkText {
                     anchors.verticalCenter: parent.verticalCenter
                     text: "Less"
-                    font.pixelSize: 9
-                    opacity: 0.7
+                    color: Theme.textMuted
                 }
 
                 Repeater {
@@ -113,8 +112,7 @@ CaptionBox {
                 InkText {
                     anchors.verticalCenter: parent.verticalCenter
                     text: "More"
-                    font.pixelSize: 9
-                    opacity: 0.7
+                    color: Theme.textMuted
                 }
             }
         }
@@ -166,9 +164,8 @@ CaptionBox {
                         Layout.fillWidth: true
                         text: stat.modelData.label
                         horizontalAlignment: Text.AlignRight
-                        font.pixelSize: 10
                         elide: Text.ElideRight
-                        opacity: 0.7
+                        color: Theme.textMuted
                     }
                 }
             }

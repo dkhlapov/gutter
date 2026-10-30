@@ -37,7 +37,6 @@ RowLayout {
             InkText {
                 anchors.centerIn: parent
                 text: "WK"
-                font.pixelSize: 11
                 font.bold: true
                 color: Theme.on.navy
             }
@@ -61,7 +60,6 @@ RowLayout {
                 InkText {
                     anchors.centerIn: parent
                     text: `W${week.modelData.week}`
-                    font.pixelSize: 12
                     font.bold: week.current
                     color: week.current ? Theme.on.sun : Theme.text
                 }
@@ -100,7 +98,6 @@ RowLayout {
                     InkText {
                         anchors.centerIn: parent
                         text: Qt.locale().dayName(head.modelData, Locale.ShortFormat).toUpperCase()
-                        font.pixelSize: 11
                         font.bold: true
                         color: head.weekend ? Theme.text : Theme.on.navy
                     }

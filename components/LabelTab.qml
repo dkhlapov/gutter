@@ -65,6 +65,5 @@ Item {
         color: root.caption ? Theme.text : Theme.on[root.accent]
         font.bold: true
         font.letterSpacing: 0.5
-        font.pixelSize: 11
     }
 }

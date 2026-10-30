@@ -97,6 +97,8 @@ Singleton {
     readonly property int textSize: 15
     readonly property int glyphSize: 18
     readonly property int appIconSize: 24
+    // The smallest size of text that carries information (a time, a unit, an axis label); InkText's default.
+    readonly property int textMin: 13
     // Gap above the resting pill. The pill floats with as much room below it (shadow to window) as above, for
     // a window alone on its workspace, which gets a 20 px gaps_out from the workspace rules in hypr/gutter/rules.lua
     // (gaps_outer_alone in hypr/gutter/vars.lua). Other windows use the general gaps_out (gaps_outer, 10), and a
@@ -129,6 +131,16 @@ Singleton {
     // Text and glyphs drawn on paper. Equal to ink in both modes today (black; soft cream at night); kept as its own
     // key so text and lines can differ.
     readonly property color text: applied.text
+    // Secondary text on paper (a date, a unit, a caption): the text colour softened toward paper, opaque, and never
+    // below 4.5:1 on it. Drawn as a colour, not as reduced opacity, so it stays legible on any surface it lands on.
+    readonly property color textMuted: PaletteLib.mutedText(applied)
+
+    // Secondary text in `ink` on `surface` (a tile's fill, an accent plate): ink softened toward the surface, never
+    // below 4.5:1 on it. Text on an accent plate has little contrast to spare (the palette's own text-on-accent pairs
+    // are 4.5:1 to 6.5:1 in dark mode), so there it stays whole.
+    function mutedOn(ink: color, surface: color): color {
+        return PaletteLib.mutedText({ text: `${ink}`, paper: `${surface}` });
+    }
     // The shadow.color setting: the ink, an accent or a role, in the current mode's half. Teal by default, since
     // an ink shadow vanishes over a dark wallpaper or window.
     readonly property color shadow: PaletteLib.shadowColour(applied, Settings.shadow.color)

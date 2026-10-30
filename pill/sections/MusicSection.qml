@@ -96,7 +96,7 @@ Item {
                         text: [Media.artist, Media.album].filter(s => s).join(" · ")
                         font.pixelSize: 13
                         elide: Text.ElideRight
-                        opacity: 0.7
+                        color: Theme.textMuted
                     }
                 }
 

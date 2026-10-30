@@ -42,9 +42,8 @@ CaptionBox {
         InkText {
             Layout.fillWidth: true
             text: root.item ? `${ClipLib.meta(root.item)} · ${ClipLib.age(root.item.t, Clipboard.now)}` : ""
-            font.pixelSize: 12
             elide: Text.ElideRight
-            opacity: 0.75
+            color: Theme.textMuted
         }
 
         Rectangle {

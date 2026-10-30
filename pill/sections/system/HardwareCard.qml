@@ -95,8 +95,7 @@ CaptionBox {
             InkText {
                 Layout.alignment: Qt.AlignHCenter
                 text: "Usage"
-                font.pixelSize: 12
-                opacity: 0.7
+                color: Theme.textMuted
             }
 
             UsageShape {

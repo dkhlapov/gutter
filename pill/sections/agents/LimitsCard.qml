@@ -94,7 +94,6 @@ CaptionBox {
 
                     InkText {
                         text: row.modelData.label
-                        font.pixelSize: 12
                         font.bold: true
                         elide: Text.ElideRight
                         Layout.maximumWidth: rows.width * 0.6
@@ -110,9 +109,8 @@ CaptionBox {
                     InkText {
                         Layout.fillWidth: true
                         text: row.w === null ? "" : row.w.renewed ? "Reset · waiting for new data" : row.w.resetsIn > 0 ? U.duration(row.w.resetsIn) : ""
-                        font.pixelSize: 11
                         elide: Text.ElideRight
-                        opacity: 0.7
+                        color: Theme.textMuted
                     }
 
                     InkText {

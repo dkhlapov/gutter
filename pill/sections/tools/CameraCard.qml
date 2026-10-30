@@ -76,8 +76,7 @@ CaptionBox {
                 InkText {
                     anchors.horizontalCenter: parent.horizontalCenter
                     text: root.problem !== "" ? root.problem : root.on ? "Starting…" : "Check yourself before a call"
-                    font.pixelSize: 11
-                    opacity: 0.7
+                    color: Theme.textMuted
                 }
             }
         }

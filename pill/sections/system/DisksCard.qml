@@ -63,8 +63,7 @@ CaptionBox {
 
                 InkText {
                     text: `${Format.kib(disk.modelData.used)} / ${Format.kib(disk.modelData.total)}`
-                    font.pixelSize: 12
-                    opacity: 0.7
+                    color: Theme.textMuted
                 }
             }
 

@@ -117,7 +117,6 @@ InkBox {
         InkText {
             width: parent.width
             text: ShelfLib.baseName(root.path)
-            font.pixelSize: 12
             font.bold: true
             elide: Text.ElideMiddle
             color: root.lit ? Theme.on.sun : Theme.text
@@ -126,10 +125,8 @@ InkBox {
         InkText {
             width: parent.width
             text: root.subtitle
-            font.pixelSize: 11
             elide: Text.ElideRight
-            color: root.lit ? Theme.on.sun : Theme.text
-            opacity: 0.75
+            color: Theme.mutedOn(root.lit ? Theme.on.sun : Theme.text, root.lit ? Theme.accent.sun : Theme.paper)
         }
     }
 

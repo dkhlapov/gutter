@@ -60,7 +60,6 @@ CaptionBox {
 
                 InkText {
                     text: `${Qt.formatDate(clock.date, "ddd, d MMM")} · week ${Cal.isoWeek(clock.date)}`
-                    font.pixelSize: 12
                 }
             }
 
@@ -94,15 +93,13 @@ CaptionBox {
                 InkText {
                     Layout.alignment: Qt.AlignRight
                     text: `${WeatherLib.condition(root.weather?.current.code ?? -1)} · H ${Math.round(root.weather?.today.max ?? 0)}° L ${Math.round(root.weather?.today.min ?? 0)}°`
-                    font.pixelSize: 12
                 }
 
                 InkText {
                     Layout.alignment: Qt.AlignRight
                     visible: root.sun.next !== null
                     text: root.sun.next ? `${root.sun.next.label} ${root.sun.next.text}` : ""
-                    font.pixelSize: 12
-                    opacity: 0.75
+                    color: Theme.textMuted
                 }
             }
         }

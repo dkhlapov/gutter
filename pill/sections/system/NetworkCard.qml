@@ -91,8 +91,7 @@ CaptionBox {
                 anchors.centerIn: parent
                 visible: NetworkUsage.downloadBuffer.length < 2
                 text: "Collecting data..."
-                font.pixelSize: 12
-                opacity: 0.7
+                color: Theme.textMuted
             }
         }
     }

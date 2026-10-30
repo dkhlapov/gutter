@@ -27,7 +27,6 @@ ColumnLayout {
 
         InkText {
             text: Format.duration(bar.dragging ? bar.fraction * Media.length : Media.position)
-            font.pixelSize: 12
         }
 
         Item {
@@ -36,7 +35,6 @@ ColumnLayout {
 
         InkText {
             text: Format.duration(Media.length)
-            font.pixelSize: 12
         }
     }
 }

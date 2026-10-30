@@ -78,15 +78,12 @@ Item {
 
                     InkText {
                         text: `updated ${Qt.formatTime(new Date(Weather.updatedAt), "hh:mm")}`
-                        font.pixelSize: 11
-                        color: root.ink
-                        opacity: 0.75
+                        color: Theme.mutedOn(root.ink, Theme.accent[root.heroAccent])
                     }
 
                     InkText {
                         visible: Weather.stale
                         text: "· stale"
-                        font.pixelSize: 11
                         font.bold: true
                         color: root.ink
                     }

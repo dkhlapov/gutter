@@ -33,8 +33,7 @@ CaptionBox {
             Layout.fillWidth: true
             horizontalAlignment: Text.AlignRight
             text: `${U.periodLabel(root.period)} · ${U.money(root.total)}`
-            font.pixelSize: 11
-            opacity: 0.7
+            color: Theme.textMuted
         }
 
         RowLayout {
@@ -82,8 +81,7 @@ CaptionBox {
                     Layout.fillWidth: true
                     horizontalAlignment: index === 0 ? Text.AlignLeft : index === 2 ? Text.AlignRight : Text.AlignHCenter
                     text: modelData
-                    font.pixelSize: 10
-                    opacity: 0.7
+                    color: Theme.textMuted
                 }
             }
         }

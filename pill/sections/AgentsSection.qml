@@ -102,9 +102,8 @@ Item {
                         InkText {
                             Layout.fillWidth: true
                             text: (root.usage?.unknown?.length ?? 0) > 0 ? "API value · some models have no price" : "API value"
-                            font.pixelSize: 11
                             elide: Text.ElideRight
-                            opacity: 0.75
+                            color: Theme.textMuted
                         }
                     }
 

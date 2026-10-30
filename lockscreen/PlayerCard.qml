@@ -57,8 +57,8 @@ InkBox {
                 text: Media.artist
                 textFormat: Text.PlainText
                 elide: Text.ElideRight
-                opacity: 0.7
-                font.pixelSize: Math.round(12 * root.ui)
+                color: Theme.textMuted
+                font.pixelSize: Math.round(Theme.textMin * root.ui)
             }
         }
 

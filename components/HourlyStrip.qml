@@ -87,7 +87,6 @@ RowLayout {
                     InkText {
                         anchors.verticalCenter: parent.verticalCenter
                         text: `${col.modelData.pop}%`
-                        font.pixelSize: 11
                         font.bold: col.wet
                         color: col.ink
                         opacity: col.wet ? 1 : 0.5

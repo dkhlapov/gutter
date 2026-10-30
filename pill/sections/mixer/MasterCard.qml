@@ -80,7 +80,6 @@ CaptionBox {
             InkText {
                 opacity: Audio.muted || root.streamCount > 0 ? 0.75 : 0
                 text: Audio.muted ? "Muted" : `${root.streamCount} playing`
-                font.pixelSize: 12
             }
         }
     }

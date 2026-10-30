@@ -93,7 +93,7 @@ Item {
                             anchors.verticalCenter: parent.verticalCenter
                             visible: search.text === ""
                             text: `Search ${Clipboard.items.length} items…`
-                            opacity: 0.6
+                            color: Theme.textMuted
                         }
 
                         MouseArea {

@@ -62,8 +62,7 @@ CaptionBox {
                         anchors.horizontalCenter: parent.horizontalCenter
                         visible: text !== ""
                         text: root.stopwatch || Timers.timer.state === "idle" ? "" : `of ${ToolsLib.spoken(Timers.timer.durationMs)}`
-                        font.pixelSize: 11
-                        opacity: 0.75
+                        color: Theme.textMuted
                     }
                 }
             }
@@ -106,8 +105,7 @@ CaptionBox {
                 visible: Timers.stopwatch.laps.length === 0
                 horizontalAlignment: Text.AlignHCenter
                 text: "No laps yet"
-                font.pixelSize: 12
-                opacity: 0.7
+                color: Theme.textMuted
             }
 
             Repeater {
@@ -131,7 +129,6 @@ CaptionBox {
                         width: Math.min(implicitWidth, parent.width - 2 * Theme.gap)
                         elide: Text.ElideRight
                         text: `Lap ${lapChip.laps.length - lapChip.index}  ${ToolsLib.stopwatchClock(lapChip.lapTime)}`
-                        font.pixelSize: 12
                     }
                 }
             }

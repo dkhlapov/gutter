@@ -157,10 +157,9 @@ Item {
                     visible: text !== ""
                     text: root.app
                     font.bold: true
-                    font.pixelSize: 12
                     font.letterSpacing: 1
                     elide: Text.ElideRight
-                    opacity: 0.8
+                    color: Theme.textMuted
                 }
 
                 InkText {
@@ -169,9 +168,8 @@ Item {
                     visible: text !== ""
                     text: root.age === "" || root.app === "" ? root.age : ` · ${root.age}`
                     font.bold: true
-                    font.pixelSize: 12
                     font.letterSpacing: 1
-                    opacity: 0.8
+                    color: Theme.textMuted
                 }
 
                 // A repeat of the same notification.
@@ -193,7 +191,6 @@ Item {
                         text: `×${root.count}`
                         color: Theme.on.sun
                         font.bold: true
-                        font.pixelSize: 12
                     }
                 }
 
@@ -245,12 +242,11 @@ Item {
                 Layout.fillWidth: true
                 visible: text !== ""
                 text: root.body
-                font.pixelSize: 12
                 // Anywhere, not only at a space: a body that is one long word still stops at the edge.
                 wrapMode: Text.WrapAtWordBoundaryOrAnywhere
                 maximumLineCount: 4
                 elide: Text.ElideRight
-                opacity: 0.7
+                color: Theme.textMuted
             }
 
             // The buttons and the reply field sit on an area of their own that takes clicks and does nothing, so a
@@ -331,7 +327,7 @@ Item {
                                 visible: field.text === ""
                                 text: root.rec?.replyPlaceholder || "Reply…"
                                 elide: Text.ElideRight
-                                opacity: 0.6
+                                color: Theme.textMuted
                             }
 
                             MouseArea {

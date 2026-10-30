@@ -65,7 +65,7 @@ Item {
                     width: parent.width
                     horizontalAlignment: Text.AlignHCenter
                     text: root.tall ? root.label : root.shortLabel
-                    font.pixelSize: root.tall ? 14 : 11
+                    font.pixelSize: root.tall ? 14 : Theme.textMin
                     font.bold: true
                     elide: Text.ElideRight
                     color: root.ink
@@ -76,10 +76,8 @@ Item {
                     visible: root.tall && root.status !== ""
                     horizontalAlignment: Text.AlignHCenter
                     text: root.status
-                    font.pixelSize: 12
                     elide: Text.ElideRight
-                    color: root.ink
-                    opacity: 0.8
+                    color: Theme.mutedOn(root.ink, root.lit ? Theme.accent[Theme.roleAccent.active] : Theme.paper)
                 }
             }
         }

@@ -83,7 +83,7 @@ RowLayout {
 
         InkText {
             text: ToolsLib.spoken(Timers.timer.durationMs)
-            opacity: 0.7
+            color: Theme.textMuted
         }
     }
 }

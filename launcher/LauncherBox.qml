@@ -76,7 +76,6 @@ CaptionBox {
                         anchors.centerIn: parent
                         text: "cmd"
                         color: Theme.on[Theme.roleAccent.active]
-                        font.pixelSize: 11
                         font.bold: true
                     }
                 }
@@ -127,7 +126,7 @@ CaptionBox {
                         anchors.verticalCenter: parent.verticalCenter
                         width: parent.width
                         text: "Search apps, or type / for commands"
-                        opacity: 0.5
+                        color: Theme.textMuted
                         elide: Text.ElideRight
                     }
                 }

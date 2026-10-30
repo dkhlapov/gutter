@@ -52,7 +52,7 @@ InkBox {
                 text: "TEST PAM"
                 color: Theme.on.coral
                 font.bold: true
-                font.pixelSize: Math.round(10 * root.ui)
+                font.pixelSize: Math.round(Theme.textMin * root.ui)
             }
 
             Rectangle {
@@ -92,7 +92,7 @@ InkBox {
                 x: root.pad
                 opacity: Auth.checking ? 1 : 0.5
                 text: Auth.checking ? "…" : "Password"
-                font.pixelSize: Math.round(12 * root.ui)
+                font.pixelSize: Math.round(Theme.textMin * root.ui)
             }
 
             InkIcon {

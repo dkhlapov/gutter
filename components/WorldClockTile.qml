@@ -32,7 +32,6 @@ Rectangle {
             InkText {
                 Layout.fillWidth: true
                 text: root.label
-                font.pixelSize: 12
                 font.bold: true
                 elide: Text.ElideRight
                 color: root.ink
@@ -42,10 +41,8 @@ Rectangle {
                 Layout.fillWidth: true
                 visible: root.offset !== ""
                 text: root.offset
-                font.pixelSize: 11
                 elide: Text.ElideRight
-                color: root.ink
-                opacity: 0.7
+                color: Theme.mutedOn(root.ink, root.tone)
             }
         }
 

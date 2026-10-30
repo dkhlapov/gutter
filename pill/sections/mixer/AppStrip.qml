@@ -64,7 +64,6 @@ InkBox {
         InkText {
             Layout.alignment: Qt.AlignHCenter
             text: `${Math.round(root.level * 100)}%`
-            font.pixelSize: 12
             font.bold: true
         }
 
@@ -99,7 +98,6 @@ InkBox {
             InkText {
                 Layout.fillWidth: true
                 text: root.info?.app ?? ""
-                font.pixelSize: 12
                 font.bold: true
                 elide: Text.ElideRight
                 horizontalAlignment: Text.AlignHCenter
@@ -108,8 +106,7 @@ InkBox {
             InkText {
                 Layout.fillWidth: true
                 text: root.info?.title || " "
-                font.pixelSize: 11
-                opacity: 0.75
+                color: Theme.textMuted
                 elide: Text.ElideRight
                 horizontalAlignment: Text.AlignHCenter
             }

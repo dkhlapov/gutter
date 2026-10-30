@@ -33,9 +33,8 @@ RowLayout {
             Layout.maximumWidth: 240
             Layout.fillWidth: true
             text: [Media.artist, Media.album].filter(s => s).join(" · ")
-            font.pixelSize: 12
             elide: Text.ElideRight
-            opacity: 0.7
+            color: Theme.textMuted
         }
     }
 

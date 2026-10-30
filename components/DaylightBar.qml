@@ -67,7 +67,6 @@ ColumnLayout {
 
         InkText {
             text: root.riseText
-            font.pixelSize: 12
             font.bold: true
             color: root.ink
         }
@@ -76,15 +75,12 @@ ColumnLayout {
             Layout.fillWidth: true
             horizontalAlignment: Text.AlignHCenter
             text: root.sun?.caption ?? ""
-            font.pixelSize: 12
             elide: Text.ElideRight
-            color: root.ink
-            opacity: 0.8
+            color: Theme.mutedOn(root.ink, Theme.paper)
         }
 
         InkText {
             text: root.setText
-            font.pixelSize: 12
             font.bold: true
             color: root.ink
         }
