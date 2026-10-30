@@ -4,6 +4,8 @@
 # scripts/fit.sh, it runs from a scratch config root that links the repo's folders, with the services in
 # tests/pills/stubs (audio, network, Bluetooth, tray) standing in for the real ones so every cell shows.
 set -uo pipefail
+# A scratch root has no tools/gutter: ThemeMode would report "cannot run" to the real desktop.
+export GUTTER_NO_NOTIFY=1
 dir="$(cd "$(dirname "$0")/.." && pwd)"
 root="$(mktemp -d)"
 log="$root/log"

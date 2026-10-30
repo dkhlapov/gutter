@@ -3,6 +3,7 @@ import QtQuick.Layouts
 import qs.theme
 import qs.services
 import qs.components
+import "../../../lib/appnames.js" as Names
 
 // The active window on this panel's monitor: its class as a label tab, then its title. Nothing shows when there
 // is none; the row keeps its height so the cards below do not jump as focus moves between windows and empty
@@ -24,7 +25,7 @@ Item {
 
         LabelTab {
             visible: root.windowClass !== ""
-            text: root.windowClass
+            text: Names.displayName(root.windowClass)
             accent: Theme.roleAccent.muted
         }
 

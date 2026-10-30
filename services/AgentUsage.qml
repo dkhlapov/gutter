@@ -25,6 +25,9 @@ Singleton {
     // Usage requests that failed in a row, and the server's Retry-After for the last one (s).
     property int fetchFailures: 0
     property int retryAfter: 0
+    // Why the last request failed ("unavailable" without a usable login, "network", an HTTP status, ...); empty
+    // before the first run and after a good one.
+    property string limitsReason: ""
     property bool warned: false
     // scripts/smoke.sh runs against the real HOME and must not send the login anywhere or write state.
     readonly property bool smoke: Quickshell.env("GUTTER_SMOKE") === "1"
@@ -95,10 +98,12 @@ Singleton {
                 } catch (e) {}
                 if (r?.ok) {
                     root.fetchFailures = 0;
+                    root.limitsReason = "";
                     root.retryAfter = 0;
                     return;
                 }
                 root.fetchFailures += 1;
+                root.limitsReason = String(r?.reason ?? "");
                 root.retryAfter = r?.retryAfter ?? 0;
                 if (!root.warned && r?.reason !== "unavailable") {
                     root.warned = true;

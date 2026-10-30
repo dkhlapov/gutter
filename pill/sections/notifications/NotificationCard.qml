@@ -4,6 +4,7 @@ import Quickshell
 import qs.components
 import qs.services
 import qs.theme
+import "../../../lib/appnames.js" as Names
 import "../../../lib/glyphs.js" as Glyphs
 import "../../../lib/notifications.js" as NotifLib
 
@@ -29,7 +30,7 @@ Item {
     readonly property int count: rec?.count ?? 1
     readonly property string summary: rec?.summary ?? ""
     readonly property string body: rec?.body ?? ""
-    readonly property string app: (rec?.appName ?? "").toUpperCase()
+    readonly property string app: Names.displayName(rec?.appName ?? "").toUpperCase()
     readonly property string age: typeof rec?.at === "number" ? NotifLib.ago(rec.at, now) : ""
     readonly property bool live: rec?.live === true
     // Whether a click reaches anything: a live notification with a default action, or an app with a window open

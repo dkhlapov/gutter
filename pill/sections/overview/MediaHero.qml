@@ -17,8 +17,10 @@ CaptionBox {
     EmptyState {
         anchors.centerIn: parent
         visible: Media.active === null
-        icon: ""
+        icon: "\u{f075a}" // md-music
         text: "Nothing playing"
+        hint: "Play something in a music app and it shows up here."
+        textWidth: 170
     }
 
     RowLayout {

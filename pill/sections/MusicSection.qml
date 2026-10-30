@@ -14,8 +14,14 @@ Item {
     EmptyState {
         anchors.centerIn: parent
         visible: Media.active === null
-        icon: ""
+        accent: "pink"
+        icon: "\u{f075a}" // md-music
         text: "Nothing playing"
+        hint: "Play something in a music app and it shows up here with cover and lyrics. Browser tabs don't count."
+        textWidth: 280
+        actionText: "Launch a player"
+        actionIcon: "\u{f0349}" // md-magnify
+        onAction: Launcher.toggle(Hypr.focusedScreenName, "launcher")
     }
 
     RowLayout {
@@ -184,6 +190,8 @@ Item {
                 visible: !Lyrics.hasLyrics
                 icon: "\uf075"
                 text: "No lyrics"
+                textWidth: 220
+                hint: Media.playing ? "None found for this track." : "Lyrics load while the track plays."
             }
         }
     }

@@ -5,6 +5,8 @@
 # a scratch config root that links the repo's folders, with the Media and Agents services of tests/fit/stubs
 # standing in for the real ones.
 set -uo pipefail
+# A scratch root has no tools/gutter: ThemeMode would report "cannot run" to the real desktop.
+export GUTTER_NO_NOTIFY=1
 dir="$(cd "$(dirname "$0")/.." && pwd)"
 root="$(mktemp -d)"
 log="$root/log"

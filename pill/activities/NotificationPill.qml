@@ -4,6 +4,7 @@ import Quickshell
 import qs.components
 import qs.services
 import qs.theme
+import "../../lib/appnames.js" as Names
 import "../../lib/glyphs.js" as Glyphs
 import "../../lib/notifications.js" as NotifLib
 
@@ -87,7 +88,7 @@ Item {
                 BubbleHeadline {
                     textFormat: Text.PlainText
                     Layout.maximumWidth: 240
-                    text: (root.rec?.appName ?? "").toUpperCase()
+                    text: Names.displayName(root.rec?.appName ?? "").toUpperCase()
                     elide: Text.ElideRight
                 }
 

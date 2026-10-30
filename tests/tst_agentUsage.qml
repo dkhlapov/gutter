@@ -136,4 +136,20 @@ TestCase {
         compare(U.heatLevel(10, 10), 4);
         compare(U.heatLevel(6, 10), 3);
     }
+
+    function test_limitsEmpty() {
+        compare(U.limitsEmpty("unavailable").title, "No usable Claude login");
+        compare(U.limitsEmpty("401").title, "No usable Claude login");
+        compare(U.limitsEmpty("network").title, "Can't reach Anthropic");
+        compare(U.limitsEmpty("").title, "No plan limits yet");
+        compare(U.limitsEmpty(undefined).title, "No plan limits yet");
+        verify(U.limitsEmpty("500").hint !== "");
+    }
+
+    function test_windowLabel() {
+        compare(U.windowLabel(0, ""), "Session");
+        compare(U.windowLabel(1, ""), "Week");
+        compare(U.windowLabel(2, "Fable"), "Week · Fable");
+        compare(U.windowLabel(2, ""), "Week · one model");
+    }
 }

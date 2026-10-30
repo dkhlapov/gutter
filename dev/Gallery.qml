@@ -7,7 +7,7 @@ import qs.theme
 FloatingWindow {
     title: "gutter-gallery"
     implicitWidth: 880
-    implicitHeight: 620
+    implicitHeight: 800
     color: Theme.accent.navy
 
     Column {
@@ -179,6 +179,53 @@ FloatingWindow {
                 running: true
                 repeat: true
                 onTriggered: step++
+            }
+        }
+
+        // Empty states: bare, with a reason and a next step, and the compact strip.
+        Row {
+            spacing: 32
+
+            InkBox {
+                width: 240
+                height: 200
+
+                EmptyState {
+                    anchors.centerIn: parent
+                    icon: "\u{f0349}" // md-magnify
+                    text: "No match"
+                }
+            }
+
+            InkBox {
+                width: 300
+                height: 200
+
+                EmptyState {
+                    anchors.centerIn: parent
+                    accent: "pink"
+                    icon: "\u{f075a}" // md-music
+                    text: "Nothing playing"
+                    hint: "Start a music player and it shows up here."
+                    actionText: "Launch a player"
+                    actionIcon: "\u{f0349}" // md-magnify
+                    textWidth: 240
+                }
+            }
+
+            InkBox {
+                width: 260
+                height: 200
+
+                EmptyState {
+                    anchors.centerIn: parent
+                    compact: true
+                    accent: "magenta"
+                    icon: "\u{f0150}" // md-clock_outline
+                    text: "Limits have reset"
+                    hint: "A new window has started."
+                    textWidth: 140
+                }
             }
         }
     }
