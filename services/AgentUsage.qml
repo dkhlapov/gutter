@@ -135,9 +135,9 @@ Singleton {
         onLoaded: {
             try {
                 root.bridgeFile = JSON.parse(text());
-                // A usable reading from Claude Code outdates the last failed request's reason.
+                // A live (not yet reset) reading from Claude Code outdates the last failed request's reason.
                 const bridgeLimits = UsageLib.limits(root.bridgeFile, Date.now());
-                if (bridgeLimits.session !== null || bridgeLimits.week !== null)
+                if ((bridgeLimits.session && !bridgeLimits.session.renewed) || (bridgeLimits.week && !bridgeLimits.week.renewed))
                     root.limitsReason = "";
             } catch (e) {}
         }
