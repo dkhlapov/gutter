@@ -460,11 +460,16 @@ Singleton {
     onShownChanged: scheduleSave()
 
     function scheduleSave(): void {
-        if (loaded && !inert)
-            save.restart();
+        if (!loaded || inert)
+            return;
+        save.restart();
+        if (!saveCap.running)
+            saveCap.start();
     }
 
     function write(): void {
+        save.stop();
+        saveCap.stop();
         if (dirReady)
             file.setText(NotifLib.serialize({ dnd, next, items: history, run: runId(), shown }));
         else
@@ -663,6 +668,14 @@ Singleton {
         id: save
 
         interval: 200
+        onTriggered: root.write()
+    }
+
+    // The save timer restarts on every change, so a stream of them could hold the save back: this caps the wait.
+    Timer {
+        id: saveCap
+
+        interval: 2000
         onTriggered: root.write()
     }
 }
