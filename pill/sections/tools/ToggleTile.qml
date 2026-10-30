@@ -15,6 +15,8 @@ Item {
     property string shortLabel: label
     property string status: on ? "On" : "Off"
     property bool on: false
+    // False for a one-shot action (Lock), which a screen reader should announce as a button, not a toggle.
+    property bool checkable: true
     property bool available: true
     readonly property bool tall: height > 96
     // An unavailable tile is paper whatever its state, as InkButton draws it.
@@ -34,7 +36,7 @@ Item {
         anchors.fill: parent
         accessibleName: root.label
         checked: root.lit
-        checkable: true
+        checkable: root.checkable
         enabled: root.available
         onClicked: root.clicked()
     }

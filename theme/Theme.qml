@@ -136,8 +136,8 @@ Singleton {
     readonly property color textMuted: PaletteLib.mutedText(applied)
 
     // Secondary text in `ink` on `surface` (a tile's fill, an accent plate): ink softened toward the surface, never
-    // below 4.5:1 on it. Text on an accent plate has little contrast to spare (the palette's own text-on-accent pairs
-    // are 4.5:1 to 6.5:1 in dark mode), so there it stays whole.
+    // below 4.5:1 on it. Text on an accent plate often has little contrast to spare (the palette's own text-on-accent
+    // pairs are 4.5:1 to 6.5:1 in dark mode), so where nothing softer clears 4.5:1 it stays whole.
     function mutedOn(ink: color, surface: color): color {
         return PaletteLib.mutedText({ text: `${ink}`, paper: `${surface}` });
     }

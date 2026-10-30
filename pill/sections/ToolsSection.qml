@@ -69,6 +69,7 @@ RowLayout {
                 shortLabel: micTile ? (QuickToggles.micMuted ? "Muted" : "Mic") : awakeTile ? "Awake" : "Lock"
                 status: micTile ? (QuickToggles.micMuted ? "Muted" : "On") : awakeTile ? (on ? "On" : "Off") : "Lock screen"
                 on: micTile ? !QuickToggles.micMuted : awakeTile ? QuickToggles.keepAwake : false
+                checkable: micTile || awakeTile
                 available: micTile ? QuickToggles.micReady : true
                 onClicked: micTile ? QuickToggles.toggleMic() : awakeTile ? QuickToggles.toggleKeepAwake() : QuickToggles.lock()
             }

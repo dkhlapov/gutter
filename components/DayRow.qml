@@ -32,6 +32,7 @@ RowLayout {
         InkText {
             Layout.fillWidth: true
             text: Qt.formatDate(root.noon, "d MMM")
+            elide: Text.ElideRight
             color: Theme.textMuted
         }
     }
