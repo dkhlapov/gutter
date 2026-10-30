@@ -47,9 +47,33 @@ Column {
                 readonly property bool lit: !slot.modelData.isSeparator && slot.modelData.enabled && area.containsMouse
                 readonly property color textColor: lit ? Theme.on[list.accent] : Theme.text
 
+                // Separators are no entries; a submenu entry expands, any other triggers.
+                Accessible.role: slot.modelData.isSeparator ? Accessible.Separator : Accessible.MenuItem
+                Accessible.name: slot.modelData.isSeparator ? "" : slot.modelData.text
+                Accessible.checkable: slot.modelData.buttonType !== QsMenuButtonType.None
+                Accessible.checked: slot.modelData.checkState === Qt.Checked
+                Accessible.expandable: slot.modelData.hasChildren
+                Accessible.expanded: slot.expanded
+                Accessible.onPressAction: row.activate()
+
+                // A disabled entry reads as disabled to a screen reader as well.
+                enabled: slot.modelData.enabled
                 width: parent.width
                 height: slot.modelData.isSeparator ? Theme.inkWidth + Theme.gap : Theme.pillHeight - Theme.inkWidth
                 color: lit ? Theme.accent[list.accent] : Theme.paper
+
+                // The one way an entry is used, for a click and for a screen reader's press: a separator or a
+                // disabled entry does nothing.
+                function activate(): void {
+                    if (slot.modelData.isSeparator || !slot.modelData.enabled)
+                        return;
+                    if (slot.modelData.hasChildren)
+                        slot.expanded = !slot.expanded;
+                    else {
+                        slot.modelData.triggered();
+                        list.dismissed();
+                    }
+                }
 
                 Rectangle {
                     visible: slot.modelData.isSeparator
@@ -144,14 +168,7 @@ Column {
                     enabled: !slot.modelData.isSeparator && slot.modelData.enabled
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
-                    onClicked: {
-                        if (slot.modelData.hasChildren)
-                            slot.expanded = !slot.expanded;
-                        else {
-                            slot.modelData.triggered();
-                            list.dismissed();
-                        }
-                    }
+                    onClicked: row.activate()
                 }
             }
 

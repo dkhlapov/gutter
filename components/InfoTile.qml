@@ -16,7 +16,7 @@ Rectangle {
     Layout.fillWidth: true
     Layout.fillHeight: true
     implicitWidth: 80
-    implicitHeight: column.implicitHeight + (large ? 16 : 10) + 2 * Theme.inkWidth
+    implicitHeight: column.implicitHeight + (large ? 16 : 6) + 2 * Theme.inkWidth
     color: tone
     border.color: Theme.ink
     border.width: Theme.inkWidth
@@ -42,10 +42,9 @@ Rectangle {
                 anchors.right: glyph.visible ? glyph.left : parent.right
                 anchors.rightMargin: glyph.visible ? 4 : 0
                 text: root.label
-                font.pixelSize: root.large ? 12 : 11
+                font.pixelSize: Theme.textMin
                 elide: Text.ElideRight
-                color: root.ink
-                opacity: 0.75
+                color: Theme.mutedOn(root.ink, root.tone)
             }
 
             // Same font as the label, so the glyph sits on the label's baseline.

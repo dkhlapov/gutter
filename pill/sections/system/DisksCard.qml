@@ -56,15 +56,14 @@ CaptionBox {
                 InkText {
                     Layout.fillWidth: true
                     text: disk.modelData.mount
-                    font.pixelSize: 13
+                    font.pixelSize: Theme.textMin
                     font.bold: true
                     elide: Text.ElideRight
                 }
 
                 InkText {
                     text: `${Format.kib(disk.modelData.used)} / ${Format.kib(disk.modelData.total)}`
-                    font.pixelSize: 12
-                    opacity: 0.7
+                    color: Theme.textMuted
                 }
             }
 

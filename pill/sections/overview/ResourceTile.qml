@@ -29,7 +29,6 @@ InkBox {
 
         InkText {
             text: root.label
-            font.pixelSize: 12
             font.bold: true
         }
 
@@ -42,8 +41,7 @@ InkBox {
 
         InkText {
             text: `${Math.round(root.value * 100)}%`
-            font.pixelSize: 12
-            opacity: 0.75
+            color: Theme.textMuted
         }
     }
 }

@@ -14,6 +14,10 @@ Item {
     property string accent: ""
     property bool muted: false
     property bool interactive: true
+    // What a screen reader calls the slider ("Volume").
+    property string accessibleName
+    // What it reads out after the name; the percentage unless the caller knows better (a level that is not known).
+    property string accessibleValue: `${Math.round(clamped * 100)}%`
 
     readonly property real trackThickness: 12
     readonly property real handleLong: 22
@@ -23,6 +27,13 @@ Item {
 
     signal moved(real value)
     signal stepped(int steps)
+
+    Accessible.role: interactive ? Accessible.Slider : Accessible.ProgressBar
+    Accessible.name: accessibleName
+    Accessible.description: accessibleValue
+    Accessible.focusable: interactive && enabled
+    Accessible.onIncreaseAction: root.stepped(1)
+    Accessible.onDecreaseAction: root.stepped(-1)
 
     implicitWidth: vertical ? handleLong : 120
     implicitHeight: vertical ? 120 : handleLong

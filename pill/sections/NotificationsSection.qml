@@ -122,6 +122,7 @@ Item {
                     icon: Glyphs.glyph("do_not_disturb")
                     text: "Do not disturb"
                     checked: Notifications.dnd
+                    checkable: true
                     onClicked: Notifications.toggleDnd()
                 }
 

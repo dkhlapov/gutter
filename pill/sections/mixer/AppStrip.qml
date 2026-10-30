@@ -64,11 +64,11 @@ InkBox {
         InkText {
             Layout.alignment: Qt.AlignHCenter
             text: `${Math.round(root.level * 100)}%`
-            font.pixelSize: 12
             font.bold: true
         }
 
         InkSlider {
+            accessibleName: `${root.info?.app || "App"} volume`
             Layout.alignment: Qt.AlignHCenter
             Layout.fillHeight: true
             vertical: true
@@ -81,12 +81,14 @@ InkBox {
         }
 
         InkButton {
+            accessibleName: `Mute ${root.info?.app || "App"}`
             Layout.alignment: Qt.AlignHCenter
             Layout.preferredHeight: 26
             Layout.rightMargin: Theme.shadowOffset
             icon: Glyphs.glyph(VolumeLib.icon(root.level, root.muted))
             iconSize: 14
             checked: root.muted
+            checkable: true
             enabled: root.audio !== null
             onClicked: if (root.audio)
                 root.audio.muted = !root.audio.muted
@@ -99,7 +101,6 @@ InkBox {
             InkText {
                 Layout.fillWidth: true
                 text: root.info?.app ?? ""
-                font.pixelSize: 12
                 font.bold: true
                 elide: Text.ElideRight
                 horizontalAlignment: Text.AlignHCenter
@@ -108,8 +109,7 @@ InkBox {
             InkText {
                 Layout.fillWidth: true
                 text: root.info?.title || " "
-                font.pixelSize: 11
-                opacity: 0.75
+                color: Theme.textMuted
                 elide: Text.ElideRight
                 horizontalAlignment: Text.AlignHCenter
             }

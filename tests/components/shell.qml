@@ -16,6 +16,7 @@ ShellRoot {
     property int checks: 0
     property int belowWheels: 0
     property var moves: []
+    property var seeks: []
     property int steps: 0
 
     function expect(ok, what) {
@@ -137,6 +138,42 @@ ShellRoot {
         expect(fewer.length === 2 && fewer[0] === before[0] && fewer[1] === before[1], "a closed workspace rebuilds the other boxes: " + fewer.length);
     }
 
+    // Screen readers: the shared controls name themselves and say what they are, so every use inherits it.
+    function accessibility() {
+        const role = (item, want, what) => expect(item.Accessible.role === want, what + " has the wrong accessible role: " + item.Accessible.role);
+        role(textButton, Accessible.Button, "a button");
+        expect(textButton.Accessible.name === "Save", "a button is named by its text: '" + textButton.Accessible.name + "'");
+        expect(iconButton.Accessible.name === "Mute", "an icon-only button takes its accessibleName: '" + iconButton.Accessible.name + "'");
+        expect(!iconButton.Accessible.checked && toggleButton.Accessible.checked, "a button does not say it is checked");
+        expect(toggleButton.Accessible.checkable && !iconButton.Accessible.checkable, "only a toggle is checkable");
+        role(slide, Accessible.Slider, "a slider");
+        expect(slide.Accessible.name === "Volume", "a slider takes its accessibleName: '" + slide.Accessible.name + "'");
+        expect(slide.Accessible.description === "50%", "a slider does not say its value: '" + slide.Accessible.description + "'");
+        role(seek, Accessible.Slider, "a seek bar");
+        expect(seek.Accessible.name === "Seek", "a seek bar is not named: '" + seek.Accessible.name + "'");
+        role(plainTab, Accessible.PageTab, "a tab");
+        expect(plainTab.Accessible.name === "Weather" && plainTab.Accessible.selected === false, "a tab is named by its text and says it is not selected");
+        expect(activeTab.Accessible.selected, "the active tab does not say it is selected");
+        role(captionTab, Accessible.StaticText, "a lone caption");
+        role(statusCell, Accessible.Button, "a bar cell");
+        expect(statusCell.Accessible.name === "Microphone", "a bar cell takes its accessibleName: '" + statusCell.Accessible.name + "'");
+        expect(statusCell.Accessible.description === "On", "a bar cell does not carry its tooltip's body: '" + statusCell.Accessible.description + "'");
+        expect(tipCell.Accessible.name === "Network", "a bar cell falls back to its tooltip's title: '" + tipCell.Accessible.name + "'");
+        expect(textCell.Accessible.name === "EN", "a bar cell falls back to its text: '" + textCell.Accessible.name + "'");
+        expect(stateCell.Accessible.description === "Muted", "a bar cell's own state does not win over its tooltip: '" + stateCell.Accessible.description + "'");
+        expect(slide.Accessible.focusable && seek.Accessible.focusable, "an interactive slider cannot be focused by a screen reader");
+        expect(!unknownLevel.Accessible.focusable && !shownSeek.Accessible.focusable, "a progress bar can be focused");
+        role(unknownLevel, Accessible.ProgressBar, "a level that is only shown");
+        expect(unknownLevel.Accessible.description === "Unavailable", "an unknown level reads as a percentage: '" + unknownLevel.Accessible.description + "'");
+        shell.seeks = [];
+        seek.Accessible.increaseAction();
+        seek.Accessible.decreaseAction();
+        seek.seekBy(500);
+        seek.seekBy(-500);
+        shownSeek.seekBy(5);
+        expect(JSON.stringify(shell.seeks) === "[35,25,100,0]", "a screen reader's seeks are not stepped and bounded, or a progress bar seeks: " + JSON.stringify(shell.seeks));
+    }
+
     // A wheel turn of `delta` (120 is a notch); the steps it made.
     function wheelSteps(delta) {
         shell.steps = 0;
@@ -240,8 +277,120 @@ ShellRoot {
             y: 200
             width: 120
             value: 0.5
+            accessibleName: "Volume"
             onMoved: v => shell.moves = [...shell.moves, v]
             onStepped: n => shell.steps += n
+        }
+
+        InkButton {
+            id: textButton
+
+            visible: false
+            text: "Save"
+        }
+
+        InkButton {
+            id: iconButton
+
+            visible: false
+            icon: "x"
+            accessibleName: "Mute"
+        }
+
+        InkButton {
+            id: toggleButton
+
+            visible: false
+            icon: "x"
+            accessibleName: "Mute"
+            checkable: true
+            checked: true
+        }
+
+        SeekBar {
+            id: seek
+
+            visible: false
+            accessibleName: "Seek"
+            position: 30
+            length: 100
+            onSeek: seconds => shell.seeks = [...shell.seeks, seconds]
+        }
+
+        SeekBar {
+            id: shownSeek
+
+            visible: false
+            interactive: false
+            accessibleName: "Progress"
+            position: 30
+            length: 100
+        }
+
+        InkSlider {
+            id: unknownLevel
+
+            visible: false
+            interactive: false
+            accessibleName: "Brightness"
+            accessibleValue: "Unavailable"
+        }
+
+        LabelTab {
+            id: plainTab
+
+            visible: false
+            text: "Weather"
+        }
+
+        LabelTab {
+            id: activeTab
+
+            visible: false
+            text: "Tools"
+            active: true
+        }
+
+        LabelTab {
+            id: captionTab
+
+            visible: false
+            text: "Hourly"
+            caption: true
+        }
+
+        Segment {
+            id: statusCell
+
+            visible: false
+            icon: "x"
+            accessibleName: "Microphone"
+            tip: ({ title: "Mic", body: "On" })
+        }
+
+        Segment {
+            id: stateCell
+
+            visible: false
+            icon: "x"
+            accessibleName: "Volume"
+            accessibleDescription: "Muted"
+            tip: ({ title: "Volume", body: "50 %" })
+        }
+
+        Segment {
+            id: tipCell
+
+            visible: false
+            icon: "x"
+            tip: ({ title: "Network", body: "Online" })
+        }
+
+        Segment {
+            id: textCell
+
+            visible: false
+            text: "EN"
         }
 
         WorkspaceBar {
@@ -334,6 +483,7 @@ ShellRoot {
                 shell.slider();
                 shell.wheelRemainder();
                 shell.workspaceBar();
+                shell.accessibility();
                 menuSteps.start();
             }
         }

@@ -42,9 +42,8 @@ CaptionBox {
         InkText {
             Layout.fillWidth: true
             text: root.item ? `${ClipLib.meta(root.item)} · ${ClipLib.age(root.item.t, Clipboard.now)}` : ""
-            font.pixelSize: 12
             elide: Text.ElideRight
-            opacity: 0.75
+            color: Theme.textMuted
         }
 
         Rectangle {
@@ -124,12 +123,15 @@ CaptionBox {
             }
 
             InkButton {
+                accessibleName: "Pin"
                 icon: ""
                 checked: root.item?.pinned ?? false
+                checkable: true
                 onClicked: Clipboard.togglePin(root.item.id)
             }
 
             InkButton {
+                accessibleName: "Delete"
                 icon: ""
                 onClicked: Clipboard.remove(root.item.id)
             }

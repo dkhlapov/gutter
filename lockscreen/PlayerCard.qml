@@ -48,7 +48,7 @@ InkBox {
                 textFormat: Text.PlainText
                 elide: Text.ElideRight
                 font.bold: true
-                font.pixelSize: Math.round(13 * root.ui)
+                font.pixelSize: Math.round(Theme.textMin * root.ui)
             }
 
             InkText {
@@ -57,8 +57,8 @@ InkBox {
                 text: Media.artist
                 textFormat: Text.PlainText
                 elide: Text.ElideRight
-                opacity: 0.7
-                font.pixelSize: Math.round(12 * root.ui)
+                color: Theme.textMuted
+                font.pixelSize: Math.round(Theme.textMin * root.ui)
             }
         }
 
@@ -71,6 +71,7 @@ InkBox {
             spacing: Math.round(4 * root.ui)
 
             InkButton {
+                accessibleName: "Previous track"
                 width: root.button
                 height: root.button
                 icon: ""
@@ -79,6 +80,7 @@ InkBox {
             }
 
             InkButton {
+                accessibleName: Media.playing ? "Pause" : "Play"
                 width: root.button
                 height: root.button
                 icon: Media.playing ? "" : ""
@@ -88,6 +90,7 @@ InkBox {
             }
 
             InkButton {
+                accessibleName: "Next track"
                 width: root.button
                 height: root.button
                 icon: ""

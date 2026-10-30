@@ -83,7 +83,7 @@ Item {
                                 anchors.baseline: parent.children[0].baseline
                                 text: Qt.formatTime(root.now, ":ss")
                                 font.pixelSize: 18
-                                opacity: 0.6
+                                color: Theme.textMuted
                             }
                         }
 
@@ -98,9 +98,8 @@ Item {
                         InkText {
                             Layout.fillWidth: true
                             text: `Week ${Cal.isoWeek(root.now)} · day ${Cal.dayOfYear(root.now)} of ${Cal.daysInYear(root.now.getFullYear())}`
-                            font.pixelSize: 12
                             elide: Text.ElideRight
-                            opacity: 0.75
+                            color: Theme.textMuted
                         }
                     }
                 }
@@ -166,11 +165,13 @@ Item {
                     }
 
                     InkButton {
+                        accessibleName: "Previous month"
                         icon: ""
                         onClicked: root.shift(-1)
                     }
 
                     InkButton {
+                        accessibleName: "Next month"
                         icon: ""
                         onClicked: root.shift(1)
                     }

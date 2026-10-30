@@ -15,6 +15,15 @@ Item {
     property bool caption: false
     readonly property real swatch: 10
 
+    // A screen reader's click on the tab. CaptionBox switches the section on it; a caption does nothing.
+    signal activated
+
+    Accessible.role: caption ? Accessible.StaticText : Accessible.PageTab
+    Accessible.name: text
+    Accessible.selectable: !caption
+    Accessible.selected: active && !caption
+    Accessible.onPressAction: if (!caption) root.activated()
+
     implicitWidth: label.implicitWidth + 2 * Theme.pad + (caption ? swatch + Theme.gap - 2 : 0)
     implicitHeight: Theme.pillHeight - 2 * Theme.inkWidth + (active && !caption ? 2 * Theme.inkWidth : 0)
 
@@ -65,6 +74,5 @@ Item {
         color: root.caption ? Theme.text : Theme.on[root.accent]
         font.bold: true
         font.letterSpacing: 0.5
-        font.pixelSize: 11
     }
 }

@@ -73,10 +73,8 @@ CaptionBox {
             Layout.fillWidth: true
             horizontalAlignment: Text.AlignHCenter
             text: root.hot ? "They are kept here, not copied" : root.empty ? "Held until you drag them out" : "Drag a tile out to use it"
-            font.pixelSize: 12
             elide: Text.ElideRight
-            color: root.ink
-            opacity: 0.75
+            color: Theme.mutedOn(root.ink, root.hot ? Theme.accent.sun : Theme.paper)
         }
 
         InkButton {

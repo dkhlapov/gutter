@@ -25,15 +25,15 @@ RowLayout {
         InkText {
             Layout.fillWidth: true
             text: Qt.locale().dayName(root.noon.getDay(), Locale.ShortFormat)
-            font.pixelSize: 13
+            font.pixelSize: Theme.textMin
             font.bold: true
         }
 
         InkText {
             Layout.fillWidth: true
             text: Qt.formatDate(root.noon, "d MMM")
-            font.pixelSize: 11
-            opacity: 0.7
+            elide: Text.ElideRight
+            color: Theme.textMuted
         }
     }
 
@@ -58,9 +58,8 @@ RowLayout {
         InkText {
             anchors.verticalCenter: parent.verticalCenter
             text: `${root.day.pop}%`
-            font.pixelSize: 11
             font.bold: root.day.pop >= 30
-            opacity: root.day.pop >= 30 ? 1 : 0.5
+            color: root.day.pop >= 30 ? Theme.text : Theme.textMuted
         }
     }
 
@@ -68,8 +67,7 @@ RowLayout {
         Layout.preferredWidth: 28
         horizontalAlignment: Text.AlignRight
         text: `${Math.round(root.day.min)}°`
-        font.pixelSize: 12
-        opacity: 0.7
+        color: Theme.textMuted
     }
 
     Rectangle {
@@ -94,7 +92,7 @@ RowLayout {
         Layout.preferredWidth: 32
         horizontalAlignment: Text.AlignRight
         text: `${Math.round(root.day.max)}°`
-        font.pixelSize: 13
+        font.pixelSize: Theme.textMin
         font.bold: true
     }
 }

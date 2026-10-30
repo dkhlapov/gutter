@@ -31,7 +31,6 @@ CaptionBox {
         InkText {
             Layout.alignment: Qt.AlignHCenter
             text: `${Format.kib(Memory.used)} / ${Format.kib(Memory.total)}`
-            font.pixelSize: 12
         }
     }
 }

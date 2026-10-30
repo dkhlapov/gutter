@@ -157,10 +157,9 @@ Item {
                     visible: text !== ""
                     text: root.app
                     font.bold: true
-                    font.pixelSize: 12
                     font.letterSpacing: 1
                     elide: Text.ElideRight
-                    opacity: 0.8
+                    color: Theme.textMuted
                 }
 
                 InkText {
@@ -169,9 +168,8 @@ Item {
                     visible: text !== ""
                     text: root.age === "" || root.app === "" ? root.age : ` · ${root.age}`
                     font.bold: true
-                    font.pixelSize: 12
                     font.letterSpacing: 1
-                    opacity: 0.8
+                    color: Theme.textMuted
                 }
 
                 // A repeat of the same notification.
@@ -193,7 +191,6 @@ Item {
                         text: `×${root.count}`
                         color: Theme.on.sun
                         font.bold: true
-                        font.pixelSize: 12
                     }
                 }
 
@@ -206,6 +203,9 @@ Item {
                     objectName: "dismissButton"
                     Layout.preferredWidth: 24
                     Layout.preferredHeight: 24
+                    Accessible.role: Accessible.Button
+                    Accessible.name: "Dismiss notification"
+                    Accessible.onPressAction: Notifications.dismiss(root.rid)
 
                     InkIcon {
                         anchors.centerIn: parent
@@ -245,12 +245,11 @@ Item {
                 Layout.fillWidth: true
                 visible: text !== ""
                 text: root.body
-                font.pixelSize: 12
                 // Anywhere, not only at a space: a body that is one long word still stops at the edge.
                 wrapMode: Text.WrapAtWordBoundaryOrAnywhere
                 maximumLineCount: 4
                 elide: Text.ElideRight
-                opacity: 0.7
+                color: Theme.textMuted
             }
 
             // The buttons and the reply field sit on an area of their own that takes clicks and does nothing, so a
@@ -305,6 +304,8 @@ Item {
                             TextInput {
                                 id: field
 
+                                Accessible.role: Accessible.EditableText
+                                Accessible.name: root.rec?.replyPlaceholder || "Reply"
                                 anchors.left: parent.left
                                 anchors.leftMargin: Theme.pad
                                 anchors.right: parent.right
@@ -316,7 +317,7 @@ Item {
                                 selectionColor: Theme.accent.sun
                                 selectedTextColor: Theme.on.sun
                                 font.family: Theme.font
-                                font.pixelSize: 13
+                                font.pixelSize: Theme.textMin
                                 // The text goes to the app as it is; nothing here builds a command from it.
                                 Keys.onReturnPressed: root.send()
                                 Keys.onEnterPressed: root.send()
@@ -331,7 +332,7 @@ Item {
                                 visible: field.text === ""
                                 text: root.rec?.replyPlaceholder || "Reply…"
                                 elide: Text.ElideRight
-                                opacity: 0.6
+                                color: Theme.textMuted
                             }
 
                             MouseArea {

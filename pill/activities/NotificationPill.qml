@@ -110,7 +110,6 @@ Item {
                         text: `+${root.waiting}`
                         color: Theme.on.sun
                         font.bold: true
-                        font.pixelSize: 12
                     }
                 }
 
@@ -122,6 +121,9 @@ Item {
                 Item {
                     Layout.preferredWidth: 24
                     Layout.preferredHeight: 24
+                    Accessible.role: Accessible.Button
+                    Accessible.name: "Dismiss notification"
+                    Accessible.onPressAction: Notifications.dismissBubble()
 
                     InkIcon {
                         anchors.centerIn: parent
@@ -157,12 +159,11 @@ Item {
                 Layout.maximumWidth: 320
                 visible: text !== ""
                 text: root.detail
-                font.pixelSize: 12
                 // Anywhere, not only at a space: a body that is one long word still stops at the edge.
                 wrapMode: Text.WrapAtWordBoundaryOrAnywhere
                 maximumLineCount: 3
                 elide: Text.ElideRight
-                opacity: 0.7
+                color: Theme.textMuted
             }
 
             // The buttons sit on an area of their own that takes clicks and does nothing, so a near miss between

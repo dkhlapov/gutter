@@ -192,7 +192,6 @@ CaptionBox {
                                 InkText {
                                     anchors.centerIn: parent
                                     text: root.letters[tile.modelData.id] ?? ""
-                                    font.pixelSize: 11
                                     font.bold: true
                                 }
                             }
@@ -218,7 +217,7 @@ CaptionBox {
                     x: root.metrics.pad
                     anchors.verticalCenter: parent.verticalCenter
                     text: "Enter confirms, Esc cancels"
-                    opacity: 0.7
+                    color: Theme.textMuted
                 }
 
                 // Cancel, then the action itself in ink: the last thing on the strip is what runs.

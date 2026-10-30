@@ -30,6 +30,10 @@ Item {
     readonly property string shownText: maxTextWidth > 0 ? elider.elidedText : text
     // A tooltip ({ title, body }, or null for none) and the bar that shows it on hover.
     property var tip: null
+    // What a screen reader calls the cell: this, else the tooltip's title, else its text. An icon-only cell sets it.
+    property string accessibleName: ""
+    // Read after the name; the tip's body unless the cell says its state itself.
+    property string accessibleDescription: tip?.body ?? ""
     property var tipHost: null
     default property alias content: holder.data
 
@@ -42,6 +46,11 @@ Item {
 
     implicitWidth: square ? Theme.pillHeight : Math.max(Theme.pillHeight, contentWidth + 2 * Theme.pad + 2 * Theme.inkWidth)
     implicitHeight: Theme.pillHeight
+
+    Accessible.role: Accessible.Button
+    Accessible.name: accessibleName || tip?.title || text
+    Accessible.description: accessibleDescription
+    Accessible.onPressAction: root.clicked({ button: Qt.LeftButton })
 
     onHoveredChanged: tipHost?.hoverTip(root, hovered)
 

@@ -45,6 +45,7 @@ CaptionBox {
                 Layout.rightMargin: Theme.shadowOffset
                 Layout.bottomMargin: Theme.shadowOffset
                 player: Media.active
+                selectable: false
             }
 
             ColumnLayout {
@@ -62,9 +63,8 @@ CaptionBox {
                 InkText {
                     Layout.fillWidth: true
                     text: Media.artist
-                    font.pixelSize: 12
                     elide: Text.ElideRight
-                    opacity: 0.7
+                    color: Theme.textMuted
                 }
             }
 

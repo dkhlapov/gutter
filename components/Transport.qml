@@ -26,15 +26,18 @@ Item {
         spacing: 14
 
         InkButton {
+            accessibleName: "Shuffle"
             anchors.verticalCenter: parent.verticalCenter
             visible: root.extended && Media.canShuffle
             height: root.buttonSize
             icon: ""
             checked: Media.shuffle
+            checkable: true
             onClicked: Media.toggleShuffle()
         }
 
         InkButton {
+            accessibleName: "Previous track"
             anchors.verticalCenter: parent.verticalCenter
             height: root.buttonSize
             icon: ""
@@ -42,6 +45,7 @@ Item {
         }
 
         InkButton {
+            accessibleName: Media.playing ? "Pause" : "Play"
             anchors.verticalCenter: parent.verticalCenter
             width: root.playSize * 1.4
             height: root.playSize
@@ -52,6 +56,7 @@ Item {
         }
 
         InkButton {
+            accessibleName: "Next track"
             anchors.verticalCenter: parent.verticalCenter
             height: root.buttonSize
             icon: ""
@@ -59,11 +64,13 @@ Item {
         }
 
         InkButton {
+            accessibleName: "Repeat"
             anchors.verticalCenter: parent.verticalCenter
             visible: root.extended && Media.canLoop
             height: root.buttonSize
             icon: Media.loopState === 1 ? "\u{f0458}" : ""
             checked: Media.loopState !== 0
+            checkable: true
             onClicked: Media.cycleLoop()
         }
     }

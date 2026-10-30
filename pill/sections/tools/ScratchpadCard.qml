@@ -54,18 +54,21 @@ CaptionBox {
 
                     text: root.label(index)
                     checked: index === Scratchpad.current
+                    checkable: true
                     onClicked: Scratchpad.select(index)
                 }
             }
 
             // Closes the current note; closing the only note clears it.
             InkButton {
+                accessibleName: "Close note"
                 Layout.alignment: Qt.AlignTop
                 icon: "\u{f0156}"
                 onClicked: Scratchpad.remove(Scratchpad.current)
             }
 
             InkButton {
+                accessibleName: "New note"
                 Layout.alignment: Qt.AlignTop
                 visible: !Scratchpad.full
                 icon: "\u{f0415}"
@@ -165,7 +168,7 @@ CaptionBox {
                 visible: editor.text === ""
                 text: "Write something…"
                 font.pixelSize: 14
-                opacity: 0.5
+                color: Theme.textMuted
             }
         }
     }

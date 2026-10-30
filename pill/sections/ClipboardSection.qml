@@ -84,7 +84,7 @@ Item {
                             selectionColor: Theme.accent.sun
                             selectedTextColor: Theme.on.sun
                             font.family: Theme.font
-                            font.pixelSize: 13
+                            font.pixelSize: Theme.textMin
                             onTextChanged: root.query = text
                         }
 
@@ -93,7 +93,7 @@ Item {
                             anchors.verticalCenter: parent.verticalCenter
                             visible: search.text === ""
                             text: `Search ${Clipboard.items.length} items…`
-                            opacity: 0.6
+                            color: Theme.textMuted
                         }
 
                         MouseArea {

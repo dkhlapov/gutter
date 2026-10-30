@@ -75,10 +75,9 @@ RowLayout {
                         width: parent.width
                         horizontalAlignment: Text.AlignHCenter
                         text: hint.modelData.text
-                        font.pixelSize: 12
                         wrapMode: Text.WordWrap
                         maximumLineCount: 4
-                        opacity: 0.75
+                        color: Theme.textMuted
                     }
                 }
             }

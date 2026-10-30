@@ -62,8 +62,7 @@ CaptionBox {
                         anchors.horizontalCenter: parent.horizontalCenter
                         visible: text !== ""
                         text: root.stopwatch || Timers.timer.state === "idle" ? "" : `of ${ToolsLib.spoken(Timers.timer.durationMs)}`
-                        font.pixelSize: 11
-                        opacity: 0.75
+                        color: Theme.textMuted
                     }
                 }
             }
@@ -87,6 +86,7 @@ CaptionBox {
                     Layout.preferredWidth: 1
                     text: `${modelData}m`
                     checked: Timers.timer.durationMs === modelData * 60000 && Timers.timer.state !== "idle"
+                    checkable: true
                     onClicked: Timers.startTimer(modelData)
                 }
             }
@@ -106,8 +106,7 @@ CaptionBox {
                 visible: Timers.stopwatch.laps.length === 0
                 horizontalAlignment: Text.AlignHCenter
                 text: "No laps yet"
-                font.pixelSize: 12
-                opacity: 0.7
+                color: Theme.textMuted
             }
 
             Repeater {
@@ -131,7 +130,6 @@ CaptionBox {
                         width: Math.min(implicitWidth, parent.width - 2 * Theme.gap)
                         elide: Text.ElideRight
                         text: `Lap ${lapChip.laps.length - lapChip.index}  ${ToolsLib.stopwatchClock(lapChip.lapTime)}`
-                        font.pixelSize: 12
                     }
                 }
             }
@@ -144,11 +142,13 @@ CaptionBox {
             spacing: 14
 
             InkButton {
+                accessibleName: "Reset"
                 icon: "\u{f0709}"
                 onClicked: root.stopwatch ? Timers.resetStopwatch() : Timers.resetTimer()
             }
 
             InkButton {
+                accessibleName: root.running ? "Pause" : "Start"
                 Layout.preferredWidth: 64
                 Layout.preferredHeight: 46
                 icon: root.running ? "\u{f03e4}" : "\u{f040a}"
@@ -166,6 +166,7 @@ CaptionBox {
 
             // +1 min on the timer, lap on the stopwatch.
             InkButton {
+                accessibleName: root.stopwatch ? "Lap" : "Add one minute"
                 icon: root.stopwatch ? "\u{f023b}" : "\u{f1ae2}"
                 onClicked: root.stopwatch ? Timers.lap() : Timers.addMinute()
             }

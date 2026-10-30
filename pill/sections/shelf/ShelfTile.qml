@@ -6,7 +6,7 @@ import "../../../lib/shelf.js" as ShelfLib
 import "../../../lib/glyphs.js" as Glyphs
 
 // One held file: thumbnail or kind icon, name, size. Click opens it, dragging carries it out as a file
-// URL, the corner button takes it off the shelf. A file that is gone has dimmed text and cannot be dragged.
+// URL, the corner button takes it off the shelf. A file that is gone has a dimmed name and cannot be dragged.
 InkBox {
     id: root
 
@@ -112,28 +112,26 @@ InkBox {
         y: parent.height - 38
         width: parent.width - 20
         spacing: 1
-        opacity: root.gone ? 0.6 : 1
 
         InkText {
             width: parent.width
             text: ShelfLib.baseName(root.path)
-            font.pixelSize: 12
             font.bold: true
             elide: Text.ElideMiddle
-            color: root.lit ? Theme.on.sun : Theme.text
+            // A missing file's name is softer, in the muted colour (never a fade, which would break the contrast).
+            color: root.lit ? Theme.on.sun : root.gone ? Theme.textMuted : Theme.text
         }
 
         InkText {
             width: parent.width
             text: root.subtitle
-            font.pixelSize: 11
             elide: Text.ElideRight
-            color: root.lit ? Theme.on.sun : Theme.text
-            opacity: 0.75
+            color: Theme.mutedOn(root.lit ? Theme.on.sun : Theme.text, root.lit ? Theme.accent.sun : Theme.paper)
         }
     }
 
     InkButton {
+        accessibleName: `Remove ${ShelfLib.baseName(root.path)} from shelf`
         x: parent.width - width - 14
         y: 14
         width: 26

@@ -51,7 +51,7 @@ Flow {
                     text: bubble.modelData.app
                     textFormat: Text.PlainText
                     elide: Text.ElideRight
-                    font.pixelSize: Math.round(12 * root.ui)
+                    font.pixelSize: Math.round(Theme.textMin * root.ui)
                 }
 
                 InkText {
@@ -61,7 +61,7 @@ Flow {
                     anchors.verticalCenter: parent.verticalCenter
                     text: String(bubble.modelData.count)
                     font.bold: true
-                    font.pixelSize: Math.round(12 * root.ui)
+                    font.pixelSize: Math.round(Theme.textMin * root.ui)
                 }
             }
         }

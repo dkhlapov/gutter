@@ -13,12 +13,22 @@ Item {
     property string text
     property string accent: ""
     property bool checked: false
+    // A toggle, for a screen reader: it says whether it is checked.
+    property bool checkable: false
+    // What a screen reader calls the button: its text, or for an icon-only button the action ("Mute").
+    property string accessibleName: text
     // The accent the face is drawn in: the explicit one, else the active role's while checked, else paper.
     readonly property string face: !enabled ? "" : accent !== "" ? accent : checked ? Theme.roleAccent.active : ""
     // True while pressed or checked; can be forced to show the pressed look.
     property bool down: area.pressed || checked
 
     signal clicked
+
+    Accessible.role: Accessible.Button
+    Accessible.name: accessibleName
+    Accessible.checkable: checkable
+    Accessible.checked: checked
+    Accessible.onPressAction: root.clicked()
 
     implicitWidth: row.implicitWidth + 2 * Theme.pad + 2 * Theme.inkWidth
     implicitHeight: Theme.pillHeight

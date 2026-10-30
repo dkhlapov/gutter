@@ -58,7 +58,7 @@ CaptionBox {
                 InkText {
                     Layout.fillWidth: true
                     text: root.model
-                    font.pixelSize: 13
+                    font.pixelSize: Theme.textMin
                     font.bold: true
                     wrapMode: Text.WordWrap
                     maximumLineCount: 2
@@ -77,7 +77,7 @@ CaptionBox {
 
                 InkText {
                     text: root.temperature > 0 ? `${Math.round(root.temperature)} °C` : "— °C"
-                    font.pixelSize: 13
+                    font.pixelSize: Theme.textMin
                 }
 
                 LevelBar {
@@ -95,8 +95,7 @@ CaptionBox {
             InkText {
                 Layout.alignment: Qt.AlignHCenter
                 text: "Usage"
-                font.pixelSize: 12
-                opacity: 0.7
+                color: Theme.textMuted
             }
 
             UsageShape {

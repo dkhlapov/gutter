@@ -15,6 +15,8 @@ Item {
     property string shortLabel: label
     property string status: on ? "On" : "Off"
     property bool on: false
+    // False for a one-shot action (Lock), which a screen reader should announce as a button, not a toggle.
+    property bool checkable: true
     property bool available: true
     readonly property bool tall: height > 96
     // An unavailable tile is paper whatever its state, as InkButton draws it.
@@ -32,7 +34,9 @@ Item {
         id: button
 
         anchors.fill: parent
+        accessibleName: root.label
         checked: root.lit
+        checkable: root.checkable
         enabled: root.available
         onClicked: root.clicked()
     }
@@ -65,7 +69,7 @@ Item {
                     width: parent.width
                     horizontalAlignment: Text.AlignHCenter
                     text: root.tall ? root.label : root.shortLabel
-                    font.pixelSize: root.tall ? 14 : 11
+                    font.pixelSize: root.tall ? 14 : Theme.textMin
                     font.bold: true
                     elide: Text.ElideRight
                     color: root.ink
@@ -76,10 +80,8 @@ Item {
                     visible: root.tall && root.status !== ""
                     horizontalAlignment: Text.AlignHCenter
                     text: root.status
-                    font.pixelSize: 12
                     elide: Text.ElideRight
-                    color: root.ink
-                    opacity: 0.8
+                    color: Theme.mutedOn(root.ink, root.lit ? Theme.accent[Theme.roleAccent.active] : Theme.paper)
                 }
             }
         }

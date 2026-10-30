@@ -110,9 +110,7 @@ Item {
                 horizontalAlignment: root.compact ? Text.AlignLeft : Text.AlignHCenter
                 wrapMode: Text.WordWrap
                 text: root.hint
-                font.pixelSize: 12
-                color: root.ink
-                opacity: 0.75
+                color: Theme.mutedOn(root.ink, Theme.paper)
             }
         }
 

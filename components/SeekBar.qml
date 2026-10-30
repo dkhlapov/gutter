@@ -11,6 +11,8 @@ Item {
     property color accent: Theme.accent.pink
     // Off: the bar only shows `position`, the pointer does nothing.
     property bool interactive: true
+    // What a screen reader calls the bar ("Seek").
+    property string accessibleName
 
     readonly property real thumbSize: 20
     readonly property real trackThickness: 12
@@ -23,7 +25,15 @@ Item {
     property real landed: -1
     readonly property real fraction: dragging ? fractionAt(area.mouseX) : landed >= 0 ? landed : value
 
+    // What a screen reader's increase and decrease move the position by, in seconds.
+    readonly property real accessibleStep: 5
+
     signal seek(real seconds)
+
+    function seekBy(seconds: real): void {
+        if (interactive && length > 0)
+            seek(Math.max(0, Math.min(length, fraction * length + seconds)));
+    }
 
     function fractionAt(x: real): real {
         return Math.max(0, Math.min(1, (x - thumbSize / 2) / travel));
@@ -35,6 +45,13 @@ Item {
     }
 
     implicitHeight: thumbSize + 4
+
+    Accessible.role: interactive ? Accessible.Slider : Accessible.ProgressBar
+    Accessible.name: accessibleName
+    Accessible.description: `${Math.round(fraction * 100)}%`
+    Accessible.focusable: interactive
+    Accessible.onIncreaseAction: root.seekBy(accessibleStep)
+    Accessible.onDecreaseAction: root.seekBy(-accessibleStep)
 
     Rectangle {
         id: track

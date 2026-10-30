@@ -4,5 +4,5 @@ import qs.theme
 Text {
     color: Theme.text
     font.family: Theme.font
-    font.pixelSize: 13
+    font.pixelSize: Theme.textMin
 }

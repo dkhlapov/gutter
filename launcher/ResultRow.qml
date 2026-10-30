@@ -86,8 +86,7 @@ Rectangle {
         width: Math.max(0, root.textRoom - title.width - root.metrics.gap)
         visible: !root.waiting && width > 24
         text: root.row.subtitle
-        color: root.textColor
-        opacity: 0.6
+        color: Theme.mutedOn(root.textColor, root.lit ? Theme.accent[root.accent] : Theme.paper)
         elide: Text.ElideRight
     }
 

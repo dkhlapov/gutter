@@ -42,7 +42,7 @@ CaptionBox {
 
             InkText {
                 text: `${Format.bytes(NetworkUsage.downloadSpeed)}/s`
-                font.pixelSize: 13
+                font.pixelSize: Theme.textMin
             }
 
             Item {
@@ -64,7 +64,7 @@ CaptionBox {
 
             InkText {
                 text: `${Format.bytes(NetworkUsage.uploadSpeed)}/s`
-                font.pixelSize: 13
+                font.pixelSize: Theme.textMin
             }
         }
 
@@ -91,8 +91,7 @@ CaptionBox {
                 anchors.centerIn: parent
                 visible: NetworkUsage.downloadBuffer.length < 2
                 text: "Collecting data..."
-                font.pixelSize: 12
-                opacity: 0.7
+                color: Theme.textMuted
             }
         }
     }

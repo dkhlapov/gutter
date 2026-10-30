@@ -100,7 +100,6 @@ CaptionBox {
                             InkText {
                                 Layout.fillWidth: true
                                 text: AgentsLib.project(row.modelData.cwd)
-                                font.pixelSize: 12
                                 font.bold: true
                                 elide: Text.ElideRight
                                 color: row.ink
@@ -109,10 +108,8 @@ CaptionBox {
                             InkText {
                                 Layout.fillWidth: true
                                 text: row.waiting ? (row.modelData.message || "Needs your input") : row.u ? `${row.u.model} · ${U.tokens(row.u.output)} out · ${U.money(row.u.cost)}` : (row.modelData.tool || "Thinking")
-                                font.pixelSize: 10
                                 elide: Text.ElideRight
-                                color: row.ink
-                                opacity: 0.8
+                                color: Theme.mutedOn(row.ink, row.waiting ? Theme.accent.sun : Theme.paper)
                             }
                         }
 
@@ -145,8 +142,7 @@ CaptionBox {
             horizontalAlignment: Text.AlignHCenter
             wrapMode: Text.WordWrap
             text: !Agents.hooksInstalled ? "Run scripts/install-agent-hooks.sh" : Agents.items.length > 0 ? "Idle" : "No session running"
-            font.pixelSize: 12
-            opacity: 0.75
+            color: Theme.textMuted
         }
     }
 }

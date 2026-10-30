@@ -12,6 +12,7 @@ ColumnLayout {
     spacing: 2
 
     SeekBar {
+        accessibleName: "Seek"
         id: bar
 
         Layout.fillWidth: true
@@ -27,7 +28,6 @@ ColumnLayout {
 
         InkText {
             text: Format.duration(bar.dragging ? bar.fraction * Media.length : Media.position)
-            font.pixelSize: 12
         }
 
         Item {
@@ -36,7 +36,6 @@ ColumnLayout {
 
         InkText {
             text: Format.duration(Media.length)
-            font.pixelSize: 12
         }
     }
 }

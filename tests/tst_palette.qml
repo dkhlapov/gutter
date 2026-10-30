@@ -177,4 +177,38 @@ TestCase {
         compare(P.shadowKeyline(2, 3), 2)
         compare(P.shadowKeyline(0, 5), 0)
     }
+
+    // Secondary text: the text colour mixed into paper. Measured against the default palette's own pairs.
+    readonly property var defaultHalves: ({
+        light: { text: "#0e0d0e", paper: "#fbf6d3" },
+        dark: { text: "#e4dfbd", paper: "#151e26" }
+    })
+    function test_mix() {
+        compare(P.mix("#000000", "#ffffff", 0), "#ffffff");
+        compare(P.mix("#000000", "#ffffff", 1), "#000000");
+        compare(P.mix("#000000", "#ffffff", 0.5), "#808080");
+    }
+    function test_mutedText_clears_AA_on_paper_in_both_modes() {
+        for (const mode of ["light", "dark"]) {
+            const h = defaultHalves[mode];
+            const ratio = P.contrast(P.mutedText(h), h.paper);
+            verify(ratio >= 4.5, mode + " muted text is " + ratio.toFixed(2) + ":1 on paper, under 4.5:1");
+        }
+    }
+    function test_mutedText_is_softer_than_text() {
+        for (const mode of ["light", "dark"]) {
+            const h = defaultHalves[mode];
+            verify(P.contrast(P.mutedText(h), h.paper) < P.contrast(h.text, h.paper), mode + " muted text is as strong as text");
+        }
+    }
+    function test_mutedText_lifts_a_palette_that_would_fall_short() {
+        // Text only 5.2:1 on paper: the usual mix would land near 3:1, so the mix moves toward the text until it clears 4.5:1.
+        const h = { text: "#6b6b6b", paper: "#ffffff" };
+        verify(P.contrast(h.text, h.paper) > 5);
+        verify(P.contrast(P.mutedText(h), h.paper) >= 4.5);
+    }
+    function test_mutedText_of_text_that_cannot_clear_is_the_text() {
+        const h = { text: "#aaaaaa", paper: "#ffffff" };
+        compare(P.mutedText(h), "#aaaaaa");
+    }
 }

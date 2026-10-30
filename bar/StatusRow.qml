@@ -50,6 +50,8 @@ Row {
     Segment {
         id: volume
 
+        accessibleName: "Volume"
+        accessibleDescription: Audio.muted ? "Muted" : StatusLib.percent(Audio.volume)
         // As wide as at 100 % with the widest glyph, so the cells beside it stay put while the volume changes.
         contentWidth: Math.max(implicitContentWidth, root.widestGlyph + widest.width + Theme.gap)
         icon: StatusLib.volumeIcon(Audio.volume, Audio.muted)
@@ -68,6 +70,8 @@ Row {
     }
 
     Segment {
+        accessibleName: "Microphone"
+        accessibleDescription: Audio.micMuted ? "Muted" : "On"
         visible: Audio.micReady
         icon: StatusLib.micIcon(Audio.micMuted)
         dimmed: Audio.micMuted
@@ -75,12 +79,15 @@ Row {
     }
 
     Segment {
+        accessibleName: "Keyboard layout"
+        accessibleDescription: StatusLib.kbShort(KbLayout.layout)
         visible: KbLayout.available
         text: StatusLib.kbShort(KbLayout.layout)
         onClicked: KbLayout.next()
     }
 
     Segment {
+        accessibleName: "Network"
         visible: Network.available
         icon: StatusLib.wifiIcon(Network.strength, Network.connected, Network.wired)
         // A long network name is cut, so it cannot push the bar across the screen.
@@ -96,6 +103,7 @@ Row {
     }
 
     Segment {
+        accessibleName: "Bluetooth"
         visible: Bluetooth.available
         icon: StatusLib.bluetoothIcon(Bluetooth.powered, Bluetooth.connectedCount)
         // A long device name is cut too.

@@ -47,9 +47,8 @@ RowLayout {
             Layout.maximumWidth: 320
             visible: root.detail !== ""
             text: root.detail
-            font.pixelSize: 12
             elide: Text.ElideRight
-            opacity: 0.7
+            color: Theme.textMuted
         }
     }
 
@@ -68,8 +67,7 @@ RowLayout {
         Layout.fillWidth: true
         visible: !root.bubble && root.detail !== ""
         text: root.detail
-        font.pixelSize: 12
         elide: Text.ElideRight
-        opacity: 0.7
+        color: Theme.textMuted
     }
 }

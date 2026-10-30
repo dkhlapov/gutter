@@ -81,6 +81,7 @@ ColumnLayout {
                     spacing: Theme.gap
 
                     InkSlider {
+                        accessibleName: "Volume"
                         Layout.alignment: Qt.AlignHCenter
                         Layout.fillHeight: true
                         vertical: true
@@ -93,6 +94,7 @@ ColumnLayout {
                     }
 
                     InkButton {
+                        accessibleName: "Mute"
                         Layout.alignment: Qt.AlignHCenter
                         // Room on the right and below for the button's hard shadow.
                         Layout.rightMargin: Theme.shadowOffset
@@ -100,6 +102,7 @@ ColumnLayout {
                         icon: Glyphs.glyph(VolumeLib.icon(Audio.volume, Audio.muted))
                         iconSize: 18
                         checked: Audio.muted
+                        checkable: true
                         enabled: Audio.ready
                         onClicked: Audio.toggleMute()
                     }
@@ -112,10 +115,12 @@ ColumnLayout {
                     spacing: Theme.gap
 
                     InkSlider {
+                        accessibleName: "Brightness"
                         Layout.alignment: Qt.AlignHCenter
                         Layout.fillHeight: true
                         vertical: true
                         accent: "sun"
+                        accessibleValue: root.brightness < 0 ? "Unavailable" : `${Math.round(root.brightness * 100)}%`
                         enabled: Brightness.hasDdc(root.screenName) && root.brightness >= 0
                         value: root.brightness
                         onMoved: v => Brightness.setLevel(root.screenName, v)

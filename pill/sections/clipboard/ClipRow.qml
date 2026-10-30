@@ -84,7 +84,6 @@ Item {
             InkText {
                 width: parent.width
                 text: root.kind === "image" ? "Image" : ClipLib.preview(root.modelData.text, 120)
-                font.pixelSize: 12
                 font.bold: true
                 maximumLineCount: 2
                 wrapMode: Text.Wrap
@@ -95,10 +94,8 @@ Item {
             InkText {
                 width: parent.width
                 text: `${ClipLib.meta(root.modelData)} · ${ClipLib.age(root.modelData.t, Clipboard.now)}`
-                font.pixelSize: 11
                 elide: Text.ElideRight
-                color: root.ink
-                opacity: 0.75
+                color: Theme.mutedOn(root.ink, root.selected ? Theme.accent.sun : Theme.paper)
             }
         }
 

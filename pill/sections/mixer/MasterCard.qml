@@ -27,6 +27,7 @@ CaptionBox {
         spacing: Theme.pad
 
         InkSlider {
+            accessibleName: "Volume"
             Layout.fillHeight: true
             vertical: true
             accent: MixerLib.MASTER_ACCENT
@@ -51,6 +52,7 @@ CaptionBox {
                 iconSize: 18
                 text: Audio.muted ? "Muted" : "Mute"
                 checked: Audio.muted
+                checkable: true
                 enabled: Audio.ready
                 onClicked: Audio.toggleMute()
             }
@@ -58,7 +60,7 @@ CaptionBox {
             InkText {
                 Layout.fillWidth: true
                 text: Audio.sink?.description || Audio.sink?.nickname || "No output"
-                font.pixelSize: 13
+                font.pixelSize: Theme.textMin
                 font.bold: true
                 wrapMode: Text.Wrap
                 maximumLineCount: 3
@@ -80,7 +82,6 @@ CaptionBox {
             InkText {
                 opacity: Audio.muted || root.streamCount > 0 ? 0.75 : 0
                 text: Audio.muted ? "Muted" : `${root.streamCount} playing`
-                font.pixelSize: 12
             }
         }
     }

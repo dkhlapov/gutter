@@ -50,10 +50,9 @@ RowLayout {
                 InkText {
                     Layout.alignment: Qt.AlignHCenter
                     text: col.now ? "Now" : root.longLabels ? `${col.modelData.hour}:00` : col.modelData.hour
-                    font.pixelSize: 13
+                    font.pixelSize: Theme.textMin
                     font.bold: col.now
-                    color: col.ink
-                    opacity: col.now ? 1 : 0.7
+                    color: col.now ? col.ink : Theme.textMuted
                 }
 
                 InkIcon {
@@ -87,10 +86,8 @@ RowLayout {
                     InkText {
                         anchors.verticalCenter: parent.verticalCenter
                         text: `${col.modelData.pop}%`
-                        font.pixelSize: 11
                         font.bold: col.wet
-                        color: col.ink
-                        opacity: col.wet ? 1 : 0.5
+                        color: col.wet || col.now ? col.ink : Theme.textMuted
                     }
                 }
             }
