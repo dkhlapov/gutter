@@ -168,6 +168,12 @@ Singleton {
         const fresh = NotifLib.fromNotification(n, old.id, old.at);
         if (!fresh && NotifLib.isStrayNotification(n)) {
             dismiss(old.id);
+            // The record is gone and the reload has not made `n` live yet, so dismiss cannot reach it: let it go here.
+            try {
+                n.expire();
+            } catch (e) {
+                console.warn(`gutter: notifications: cannot expire: ${e}`);
+            }
             return;
         }
         const entry = NotifLib.adoptEntry(old, fresh);
