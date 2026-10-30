@@ -131,6 +131,10 @@ Singleton {
         queue = q;
         if (rec.transient && q.indexOf(entry.id) === -1)
             forgetBubbleOnly(entry.id);
+        // The update has not appeared yet: a reload must not let it go as the earlier bubble (markShown records it again
+        // once it is up).
+        if (rec.transient && known)
+            shown = shown.filter(id => id !== rec.serverId);
         if (known && entry.id === currentId)
             showCurrent();
     }
@@ -498,12 +502,15 @@ Singleton {
     property bool ownerWarned: false
     // The last owner check could not tell who holds the name; `owned` is as the check before it left it.
     property bool ownerUnknown: false
+    // There is no busctl to ask, so the check is not repeated.
+    property bool ownerUnsupported: false
 
     // The server asks for the name when it starts; a moment later one check says whether another daemon has it.
     onWantedChanged: {
         ownerTimer.stop();
         owned = true;
         ownerUnknown = false;
+        ownerUnsupported = false;
         if (wanted)
             ownerTimer.start();
         else
@@ -531,11 +538,12 @@ Singleton {
         const state = NotifLib.ownerState(output);
         ownerUnknown = state === "unknown";
         // No busctl: nobody can say, and asking again would not change that; `owned` stays as it is.
-        if (state === "unsupported" && !ownerWarned) {
+        ownerUnsupported = state === "unsupported";
+        if (ownerUnsupported && !ownerWarned) {
             ownerWarned = true;
             console.warn("gutter: notifications: no busctl, so another daemon holding the name cannot be detected");
         }
-        if (ownerUnknown || state === "unsupported")
+        if (ownerUnknown || ownerUnsupported)
             return;
         const other = NotifLib.otherOwner(output);
         owned = other === null;
@@ -575,7 +583,7 @@ Singleton {
     Timer {
         interval: 5000
         repeat: true
-        running: root.serverOn && (!root.owned || root.ownerUnknown) && !root.inert
+        running: root.serverOn && (!root.owned || root.ownerUnknown) && !root.ownerUnsupported && !root.inert
         onTriggered: root.checkOwner()
     }
 
