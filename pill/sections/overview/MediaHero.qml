@@ -45,6 +45,7 @@ CaptionBox {
                 Layout.rightMargin: Theme.shadowOffset
                 Layout.bottomMargin: Theme.shadowOffset
                 player: Media.active
+                selectable: false
             }
 
             ColumnLayout {
