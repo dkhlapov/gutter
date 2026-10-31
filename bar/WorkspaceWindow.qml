@@ -23,9 +23,10 @@ PanelWindow {
     implicitHeight: Theme.pillTop + Theme.pillHeight + Theme.shadowOffset + Theme.shadowKeyline
     color: "transparent"
     exclusionMode: ExclusionMode.Ignore
-    // Over a fullscreen window it drops to the bottom layer, under it, instead of unmapping: a window that is
-    // destroyed and made again while a TrayIcon is inside crashes Qt (test_windows.py).
-    WlrLayershell.layer: Settings.hideInFullscreen && Hypr.hasFullscreen(modelData.name) ? WlrLayer.Bottom : WlrLayer.Top
+    // On the top layer Hyprland hides it under a fullscreen window and shows it again after. The layer never
+    // follows fullscreen: a surface moved below the overlay layer under a fullscreen window is hidden for good, and
+    // unmapping it crashes Qt with a TrayIcon inside (test_windows.py).
+    WlrLayershell.layer: Settings.hideInFullscreen ? WlrLayer.Top : WlrLayer.Overlay
     WlrLayershell.namespace: "gutter-workspaces"
 
     mask: Region {

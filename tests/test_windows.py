@@ -6,8 +6,12 @@ ROOT = Path(__file__).resolve().parents[1]
 # window's content is moved out of the old window and into the new one, and a TrayIcon inside it keeps a
 # ShaderEffectSource on an image, which holds on to the old window ("QQuickItem: Cannot use same item on different
 # windows at the same time") and crashes Qt with a SIGSEGV in QQuickItemPrivate::deliveryAgent. The bars hit it
-# every time a fullscreen window ended. So a window never unmaps for a fullscreen window; it drops to the
-# bottom layer, under it.
+# every time a fullscreen window ended. So a window never unmaps for a fullscreen window.
+#
+# Nor does its layer follow fullscreen. Hyprland hides a top-layer surface under a fullscreen window and shows it
+# again after, by itself. Moving a surface below the overlay layer under a fullscreen window instead sets its alpha
+# to 0 with nothing to restore it, and a hidden surface gets no frame callbacks, so the window never commits the
+# move back: the bar or pill stayed gone, on one monitor, until the shell restarted.
 class Windows(unittest.TestCase):
     def windows(self):
         # Not the tests, and not hidden folders (`.claude/worktrees` holds other checkouts of this repo).
@@ -21,11 +25,10 @@ class Windows(unittest.TestCase):
             for block in re.findall(r"^    visible:.*?(?=^    \w|\Z)", p.read_text(), re.M | re.S):
                 self.assertNotRegex(block, r"(?i)fullscreen", f"{p.relative_to(ROOT)}: PanelWindow.visible follows fullscreen; use WlrLayershell.layer")
 
-    def test_fullscreen_moves_the_layer(self):
+    def test_layer_does_not_follow_fullscreen(self):
         for p in self.windows():
-            text = p.read_text()
-            if "hasFullscreen" in text:
-                self.assertRegex(text, r"WlrLayershell\.layer:[^\n]*(hasFullscreen|windowRaised)", f"{p.relative_to(ROOT)} reads hasFullscreen but not for its layer")
+            for line in re.findall(r"WlrLayershell\.layer:[^\n]*", p.read_text()):
+                self.assertNotRegex(line, r"hasFullscreen|WlrLayer\.Bottom", f"{p.relative_to(ROOT)}: the layer follows fullscreen; the top layer hides under it by itself")
 
 if __name__ == "__main__":
     unittest.main()

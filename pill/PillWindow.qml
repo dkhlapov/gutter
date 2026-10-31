@@ -21,12 +21,13 @@ PanelWindow {
     // The zone keeps tiled windows below the collapsed pill and its shadow, Theme.pillTop clear of it.
     exclusionMode: ExclusionMode.Normal
     exclusiveZone: 2 * Theme.pillTop + Theme.pillHeight + Theme.shadowOffset - Theme.windowGap
-    // Over a fullscreen window the pill drops to the bottom layer, under it, instead of unmapping: a window
-    // that is destroyed and made again while a TrayIcon is inside crashes Qt (test_windows.py).
+    // On the top layer Hyprland hides the pill under a fullscreen window and shows it again after. The layer never
+    // follows fullscreen: a surface moved below the overlay layer under a fullscreen window is hidden for good, and
+    // unmapping it crashes Qt with a TrayIcon inside (test_windows.py).
     WlrLayershell.layer: PillState.windowRaised({
         open: PillControl.openScreen === modelData.name,
-        fullscreenHidden: Settings.hideInFullscreen && Hypr.hasFullscreen(modelData.name)
-    }) ? WlrLayer.Overlay : WlrLayer.Bottom
+        hideInFullscreen: Settings.hideInFullscreen
+    }) ? WlrLayer.Overlay : WlrLayer.Top
     WlrLayershell.namespace: "gutter"
     WlrLayershell.keyboardFocus: pill.open ? WlrKeyboardFocus.OnDemand : WlrKeyboardFocus.None
 

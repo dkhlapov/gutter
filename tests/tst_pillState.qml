@@ -106,9 +106,9 @@ TestCase {
     }
 
     function test_raised_on_every_monitor() {
-        verify(S.windowRaised({ open: false, fullscreenHidden: false }));
-        verify(!S.windowRaised({ open: false, fullscreenHidden: true }));
-        verify(S.windowRaised({ open: true, fullscreenHidden: true }));
+        verify(S.windowRaised({ open: false, hideInFullscreen: false }));
+        verify(!S.windowRaised({ open: false, hideInFullscreen: true }));
+        verify(S.windowRaised({ open: true, hideInFullscreen: true }));
     }
 
     function test_bubbles() {
