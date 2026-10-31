@@ -25,8 +25,9 @@ PanelWindow {
     exclusionMode: ExclusionMode.Ignore
     // On the top layer Hyprland hides it under a fullscreen window and shows it again after. The layer never
     // follows fullscreen: a surface moved below the overlay layer under a fullscreen window is hidden for good, and
-    // unmapping it crashes Qt with a TrayIcon inside (test_windows.py).
-    WlrLayershell.layer: Settings.hideInFullscreen ? WlrLayer.Top : WlrLayer.Overlay
+    // unmapping it crashes Qt with a TrayIcon inside (test_windows.py). The pill is the only window on the overlay
+    // layer, so it stays above the bars.
+    WlrLayershell.layer: WlrLayer.Top
     WlrLayershell.namespace: "gutter-workspaces"
 
     mask: Region {

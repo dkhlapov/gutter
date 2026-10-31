@@ -27,8 +27,9 @@ class Windows(unittest.TestCase):
 
     def test_layer_does_not_follow_fullscreen(self):
         for p in self.windows():
-            for line in re.findall(r"WlrLayershell\.layer:[^\n]*", p.read_text()):
-                self.assertNotRegex(line, r"hasFullscreen|WlrLayer\.Bottom", f"{p.relative_to(ROOT)}: the layer follows fullscreen; the top layer hides under it by itself")
+            # The whole binding, to the next property of the window, so a multi-line expression and what it reads count too.
+            for binding in re.findall(r"^    WlrLayershell\.layer:.*?(?=^    \w|\Z)", p.read_text(), re.M | re.S):
+                self.assertNotRegex(binding, r"hasFullscreen|WlrLayer\.Bottom", f"{p.relative_to(ROOT)}: the layer follows fullscreen; the top layer hides under it by itself")
 
 if __name__ == "__main__":
     unittest.main()
